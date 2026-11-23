@@ -1,0 +1,15 @@
+{
+  "appId": "io.ionic.pgapp",
+  "appName": "Mahalakshami PG",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https",
+    "cleartext": true
+  },
+  "plugins": {
+    "PushNotifications": {
+      "presentationOptions": ["badge", "sound", "alert"]
+    }
+  }
+}
+
