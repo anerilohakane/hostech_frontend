@@ -181,11 +181,6 @@ export const paymentService = {
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
   },
-  getReceiptPdfUrl: (id: string) => {
-    const token = localStorage.getItem('pg_auth_token') || localStorage.getItem('token') || '';
-    const base = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-    return `${base}/receipts/${id}/pdf${token ? `?token=${encodeURIComponent(token)}` : ''}`;
-  },
 };
 
 export const depositService = {
@@ -284,11 +279,6 @@ export const reportService = {
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
   },
-  getExcelDownloadUrl: (type: 'rent' | 'collection', month?: string) => {
-    const base = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-    const token = localStorage.getItem('pg_auth_token') || localStorage.getItem('token') || '';
-    return `${base}/reports?type=${type}&format=excel${month ? `&month=${month}` : ''}${token ? `&token=${encodeURIComponent(token)}` : ''}`;
-  },
 };
 
 export const settingsService = {
@@ -301,4 +291,50 @@ export const settingsService = {
     return res.data.settings;
   },
 };
+
+export const messService = {
+  getMenu: async (propertyId?: string) => {
+    const res = await apiClient.get('/mess', { params: { propertyId } });
+    return res.data.menus;
+  },
+  updateMenu: async (data: any) => {
+    const res = await apiClient.post('/mess', data);
+    return res.data.menu;
+  },
+  getAttendance: async (date?: string, propertyId?: string) => {
+    const res = await apiClient.get('/mess/attendance', { params: { date, propertyId } });
+    return res.data;
+  },
+  submitAttendance: async (data: { date: string; havingBreakfast: boolean; havingLunch: boolean; havingDinner: boolean; propertyId?: string }) => {
+    const res = await apiClient.post('/mess/attendance', data);
+    return res.data.attendance;
+  },
+};
+
+export const guestService = {
+  getPasses: async (params?: { status?: string; propertyId?: string }) => {
+    const res = await apiClient.get('/guests', { params });
+    return res.data.passes;
+  },
+  createPass: async (data: { guestName: string; guestPhone: string; relation: string; visitDate: string; isOvernight: boolean; propertyId?: string }) => {
+    const res = await apiClient.post('/guests', data);
+    return res.data.pass;
+  },
+  updateStatus: async (passId: string, status: string, adminRemarks?: string) => {
+    const res = await apiClient.patch('/guests', { passId, status, adminRemarks });
+    return res.data.pass;
+  },
+};
+
+export const electricityService = {
+  getReadings: async (params?: { roomId?: string; billingMonth?: string; propertyId?: string }) => {
+    const res = await apiClient.get('/electricity', { params });
+    return res.data.readings;
+  },
+  saveReading: async (data: { propertyId: string; roomId: string; billingMonth: string; previousReading: number; currentReading: number; ratePerUnit?: number; notes?: string }) => {
+    const res = await apiClient.post('/electricity', data);
+    return res.data.record;
+  },
+};
+
 

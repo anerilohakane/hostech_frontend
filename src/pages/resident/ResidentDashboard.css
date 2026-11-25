@@ -1,0 +1,58 @@
+.resident-dashboard .dashboard-brand { display: flex; align-items: center; padding-left: 12px; }
+.resident-dashboard .brand-wordmark { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; line-height: 1; }
+.resident-dashboard .brand-wordmark strong { color: #fff; font: 800 15px/1 'Manrope', sans-serif; letter-spacing: -.045em; }
+.resident-dashboard .brand-wordmark strong span { color: #f2c982; }
+
+.resident-main { max-width: 700px; margin: 0 auto; padding: 16px 16px calc(98px + env(safe-area-inset-bottom)); color: #303b3c; }
+.resident-welcome { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 20px; border: 1px solid #e8e2d6; border-radius: 22px; background: linear-gradient(135deg,#fff 0%,#f1eee5 100%); box-shadow: 0 7px 20px rgba(48,59,60,.055); }
+.resident-kicker { display: inline-flex; align-items: center; gap: 5px; color: #326d75; font-size: 9px; font-weight: 800; letter-spacing: .11em; }
+.resident-kicker ion-icon { font-size: 13px; }
+.resident-welcome h1 { margin: 6px 0 3px; color: #303b3c; font: 800 23px/1.15 'Manrope',sans-serif; letter-spacing: -.045em; }
+.resident-welcome p { max-width: 215px; color: #7f8986; font-size: 11px; }
+.room-pill { display: flex; align-items: center; gap: 5px; flex: 0 0 auto; margin-top: 2px; padding: 7px 9px; border-radius: 99px; color: #326d75; background: #e5eeea; font-size: 9px; font-weight: 700; }
+.room-pill ion-icon { font-size: 12px; }
+.rent-summary { margin-top: 13px; padding: 18px; border: 1px solid #e8e2d6; border-radius: 21px; background: #fff; box-shadow: 0 7px 20px rgba(48,59,60,.055); }
+.rent-summary-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.section-kicker { display: block; color: #87918e; font-size: 8px; font-weight: 800; letter-spacing: .13em; }
+.rent-summary h2 { margin: 4px 0 0; color: #303b3c; font: 800 16px/1.2 'Manrope',sans-serif; }
+.rent-status { padding: 5px 8px; border-radius: 99px; font-size: 8px; font-weight: 800; white-space: nowrap; }
+.status-due { color: #a25d4a; background: #f8e9e3; }
+.status-paid { color: #4b806c; background: #eaf1ee; }
+.rent-amount { margin-top: 12px; color: #2d626a; font: 800 34px/1.15 'Manrope',sans-serif; letter-spacing: -.05em; }
+.rent-due-date { display: flex; align-items: center; gap: 5px; margin-top: 4px; color: #828d89; font-size: 10px; }
+.rent-due-date ion-icon { color: #c77e68; font-size: 13px; }
+.rent-actions { display: flex; gap: 8px; margin-top: 14px; }
+.rent-actions ion-button { flex: 1; min-height: 40px; margin: 0; font-size: 10px; --border-radius: 12px; }
+.rent-actions ion-button:first-child:not(.button-outline) { --background: #326d75; --color: #fff; }
+.rent-actions ion-button.button-outline { --color: #326d75; --border-color: #cbd9d4; }
+.resident-services,.resident-life { margin-top: 23px; }
+.resident-section-title { display: flex; align-items: end; justify-content: space-between; gap: 10px; margin: 0 2px 10px; }
+.resident-section-title h2 { margin: 4px 0 0; color: #303b3c; font: 800 16px/1.2 'Manrope',sans-serif; }
+.resident-section-title > span { color: #929b97; font-size: 9px; }
+.resident-service-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; }
+.resident-service { display: grid; grid-template-columns: 36px 1fr; grid-template-rows: auto auto; align-items: center; column-gap: 10px; min-height: 70px; padding: 11px; border: 1px solid #ece8df; border-radius: 16px; background: #fff; box-shadow: 0 4px 13px rgba(48,59,60,.045); text-align: left; cursor: pointer; }
+.service-icon { grid-row: span 2; display: grid; width: 36px; height: 36px; place-items: center; border-radius: 12px; font-size: 17px; }
+.service-teal { color: #326d75; background: #e8f0ee; }
+.service-clay { color: #b96f5e; background: #f8ece6; }
+.service-sage { color: #648879; background: #edf1e7; }
+.service-sand { color: #a07a53; background: #f4eddf; }
+.resident-service strong { align-self: end; color: #34423f; font-size: 11px; font-weight: 700; }
+.resident-service small { align-self: start; margin-top: 2px; color: #929b97; font-size: 8px; }
+.resident-life-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+.resident-life-card { display: flex; min-height: 116px; flex-direction: column; justify-content: space-between; padding: 10px; border-radius: 16px; background-position: center; background-size: cover; box-shadow: 0 6px 16px rgba(38,58,50,.12); }
+.resident-life-card span { display: flex; align-items: center; gap: 4px; align-self: flex-start; padding: 4px 6px; border-radius: 7px; color: #46534e; background: rgba(250,247,240,.92); font-size: 7px; font-weight: 800; letter-spacing: .05em; }
+.resident-life-card span ion-icon { color: #326d75; font-size: 11px; }
+.resident-life-card strong { color: #fff; font: 700 11px/1.25 'Manrope',sans-serif; text-shadow: 0 1px 7px rgba(0,0,0,.5); }
+.recent-receipt { margin: 14px 0 0 !important; border: 1px solid #ece8df !important; border-radius: 17px !important; background: #fff !important; box-shadow: 0 5px 15px rgba(48,59,60,.05) !important; }
+.recent-receipt ion-card-content { display: flex; align-items: center; gap: 10px; padding: 11px 13px; }
+.receipt-icon { display: grid; width: 35px; height: 35px; flex: 0 0 35px; place-items: center; border-radius: 12px; color: #326d75; background: #e8f0ee; }
+.receipt-copy { flex: 1; min-width: 0; }
+.receipt-copy strong,.receipt-copy small { display: block; }
+.receipt-copy strong { margin-top: 3px; color: #34423f; font-size: 12px; }
+.receipt-copy small { margin-top: 2px; color: #929b97; font-size: 9px; }
+.recent-receipt ion-button { margin: 0; color: #326d75; }
+
+@media (min-width: 600px) {
+  .resident-main { padding-top: 22px; }
+  .resident-service-grid { grid-template-columns: repeat(4,minmax(0,1fr)); }
+}

@@ -101,7 +101,7 @@ const AdminProfilePage: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="primary">
+        <IonToolbar>
           <IonTitle>Admin Profile</IonTitle>
           <IonButtons slot="end">
             <IonButton onClick={() => setEditModalOpen(true)}>
@@ -112,17 +112,18 @@ const AdminProfilePage: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      <IonContent className="ion-padding" style={{ '--background': '#f8fafc' }}>
+      <IonContent className="ion-padding" style={{ '--background': '#090c12' }}>
         {/* Profile Card */}
-        <IonCard style={{ margin: '0 0 16px 0', border: '1px solid #e2e8f0', textAlign: 'center' }}>
+        <IonCard style={{ margin: '0 0 16px 0', background: '#111723', border: '1px solid rgba(255, 255, 255, 0.08)', textAlign: 'center' }}>
           <IonCardContent style={{ padding: '24px 16px' }}>
             <div
               style={{
                 width: '80px',
                 height: '80px',
                 borderRadius: '50%',
-                background: '#dbeafe',
-                color: '#1d4ed8',
+                background: 'rgba(163, 230, 53, 0.15)',
+                border: '2px solid #a3e635',
+                color: '#a3e635',
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -132,10 +133,10 @@ const AdminProfilePage: React.FC = () => {
             >
               <IonIcon icon={personCircleOutline} />
             </div>
-            <h2 style={{ fontSize: '20px', fontWeight: '800', color: '#0f172a', margin: '0 0 4px 0' }}>
+            <h2 style={{ fontSize: '20px', fontWeight: '800', color: '#ffffff', margin: '0 0 4px 0' }}>
               {user?.name || 'Super Admin'}
             </h2>
-            <p style={{ margin: '0 0 10px 0', fontSize: '13px', color: '#64748b' }}>
+            <p style={{ margin: '0 0 10px 0', fontSize: '13px', color: '#94a3b8' }}>
               PG Property Owner & Administrator
             </p>
             <IonBadge color="primary" style={{ padding: '4px 10px', fontSize: '12px' }}>
@@ -152,9 +153,9 @@ const AdminProfilePage: React.FC = () => {
         </IonCard>
 
         {/* Administrator Details */}
-        <IonCard style={{ margin: '0 0 16px 0', border: '1px solid #e2e8f0' }}>
+        <IonCard style={{ margin: '0 0 16px 0', background: '#111723', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
           <IonCardContent style={{ padding: '16px' }}>
-            <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#0f172a', margin: '0 0 12px 0' }}>
+            <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#ffffff', margin: '0 0 12px 0' }}>
               Admin Account Info
             </h3>
             <IonList lines="full">
@@ -252,7 +253,7 @@ const AdminProfilePage: React.FC = () => {
         {/* Edit Profile Modal */}
         <IonModal isOpen={editModalOpen} onDidDismiss={() => setEditModalOpen(false)}>
           <IonHeader>
-            <IonToolbar color="primary">
+            <IonToolbar>
               <IonTitle>Edit Admin Profile</IonTitle>
               <IonButtons slot="end">
                 <IonButton onClick={() => setEditModalOpen(false)} style={{ color: '#ffffff', fontWeight: 800 }}>

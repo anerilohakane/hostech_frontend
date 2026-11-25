@@ -131,15 +131,15 @@ const AdminPayments: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="primary">
+        <IonToolbar>
           <IonTitle>Payment Verification</IonTitle>
         </IonToolbar>
         <IonSegment value={tab} onIonChange={(e) => setTab(e.detail.value as any)}>
           <IonSegmentButton value="pending">
-            <IonLabel>Pending Verification</IonLabel>
+            <IonLabel>Pending</IonLabel>
           </IonSegmentButton>
           <IonSegmentButton value="all">
-            <IonLabel>All Submissions</IonLabel>
+            <IonLabel>All Records</IonLabel>
           </IonSegmentButton>
           <IonSegmentButton value="cash">
             <IonLabel>Record Cash</IonLabel>
@@ -147,7 +147,7 @@ const AdminPayments: React.FC = () => {
         </IonSegment>
       </IonHeader>
 
-      <IonContent className="ion-padding" style={{ '--background': '#f8fafc' }}>
+      <IonContent className="ion-padding" style={{ '--background': '#090c12' }}>
         {tab !== 'cash' ? (
           <div>
             <div style={{ marginBottom: '12px', fontSize: '13px', color: '#64748b' }}>
@@ -155,23 +155,23 @@ const AdminPayments: React.FC = () => {
             </div>
 
             {submissions.map((sub) => (
-              <IonCard key={sub._id} style={{ margin: '0 0 16px 0', border: '1px solid #e2e8f0' }}>
+              <IonCard key={sub._id} style={{ margin: '0 0 16px 0', background: '#111723', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
                 <IonCardContent style={{ padding: '16px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                     <div>
-                      <h3 style={{ fontSize: '17px', fontWeight: '800', color: '#0f172a', margin: '0 0 4px 0' }}>
+                      <h3 style={{ fontSize: '17px', fontWeight: '800', color: '#ffffff', margin: '0 0 4px 0' }}>
                         {sub.residentId?.fullName || 'Resident'}
                       </h3>
-                      <p style={{ margin: '0 0 4px 0', fontSize: '13px', color: '#64748b' }}>
-                        Rent Month: <strong>{sub.rentMonth}</strong> • Method: <strong>{sub.paymentMethod}</strong>
+                      <p style={{ margin: '0 0 4px 0', fontSize: '13px', color: '#94a3b8' }}>
+                        Rent Month: <strong style={{ color: '#ffffff' }}>{sub.rentMonth}</strong> • Method: <strong style={{ color: '#ffffff' }}>{sub.paymentMethod}</strong>
                       </p>
-                      <p style={{ margin: '0 0 4px 0', fontSize: '13px', color: '#475569' }}>
-                        UTR / Txn ID: <code style={{ color: '#2563eb' }}>{sub.transactionId || 'None'}</code>
+                      <p style={{ margin: '0 0 4px 0', fontSize: '13px', color: '#64748b' }}>
+                        UTR / Txn ID: <code style={{ color: '#38bdf8' }}>{sub.transactionId || 'None'}</code>
                       </p>
                     </div>
 
                     <div style={{ textAlign: 'right' }}>
-                      <div style={{ fontSize: '18px', fontWeight: '800', color: '#16a34a' }}>
+                      <div style={{ fontSize: '18px', fontWeight: '800', color: '#a3e635' }}>
                         ₹{sub.amount.toLocaleString('en-IN')}
                       </div>
                       <IonBadge color={sub.status === 'Approved' ? 'success' : sub.status === 'Pending' ? 'warning' : 'danger'}>
@@ -181,13 +181,13 @@ const AdminPayments: React.FC = () => {
                   </div>
 
                   {sub.remarks && (
-                    <div style={{ background: '#f1f5f9', padding: '8px 12px', borderRadius: '8px', fontSize: '12px', marginTop: '8px', color: '#334155' }}>
+                    <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '8px 12px', borderRadius: '8px', fontSize: '12px', marginTop: '8px', color: '#cbd5e1' }}>
                       <strong>Remarks:</strong> {sub.remarks}
                     </div>
                   )}
 
                   {sub.rejectionReason && (
-                    <div style={{ background: '#fee2e2', padding: '8px 12px', borderRadius: '8px', fontSize: '12px', marginTop: '8px', color: '#991b1b' }}>
+                    <div style={{ background: 'rgba(248, 113, 113, 0.1)', padding: '8px 12px', borderRadius: '8px', fontSize: '12px', marginTop: '8px', color: '#f87171', border: '1px solid rgba(248, 113, 113, 0.2)' }}>
                       <strong>Rejection Reason:</strong> {sub.rejectionReason}
                     </div>
                   )}

@@ -124,31 +124,31 @@ const AdminReports: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="primary">
+        <IonToolbar>
           <IonTitle>Reports & Operations</IonTitle>
         </IonToolbar>
       </IonHeader>
 
-      <IonContent className="ion-padding" style={{ '--background': '#f8fafc' }}>
+      <IonContent className="ion-padding" style={{ '--background': '#090c12' }}>
         <IonLoading isOpen={loading} message="Processing..." />
 
         {/* Export Reports Card */}
-        <IonCard style={{ margin: '0 0 16px 0', borderRadius: '20px', border: '1px solid #e2e8f0', boxShadow: '0 4px 16px rgba(0,0,0,0.03)' }}>
+        <IonCard style={{ margin: '0 0 16px 0', borderRadius: '20px', background: '#111723', border: '1px solid rgba(255, 255, 255, 0.08)', boxShadow: '0 8px 24px rgba(0,0,0,0.4)' }}>
           <IonCardContent style={{ padding: '20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-              <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#e0e7ff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <IonIcon icon={downloadOutline} style={{ color: '#4f46e5', fontSize: '20px' }} />
+              <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'rgba(56, 189, 248, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <IonIcon icon={downloadOutline} style={{ color: '#38bdf8', fontSize: '20px' }} />
               </div>
-              <h2 style={{ fontSize: '17px', fontWeight: '800', margin: 0, color: '#0f172a' }}>
+              <h2 style={{ fontSize: '17px', fontWeight: '800', margin: 0, color: '#ffffff' }}>
                 Export Financial Reports
               </h2>
             </div>
-            <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '16px', lineHeight: '1.4' }}>
+            <p style={{ fontSize: '13px', color: '#94a3b8', marginBottom: '16px', lineHeight: '1.4' }}>
               Download complete structured Excel spreadsheets (.xlsx) for accounting, compliance, and audits.
             </p>
 
             <IonItem lines="inset" style={{ '--padding-start': '0', marginBottom: '16px' }}>
-              <IonLabel position="stacked" style={{ fontWeight: '700', color: '#334155' }}>
+              <IonLabel position="stacked" style={{ fontWeight: '700', color: '#94a3b8' }}>
                 Filter Month for Rent Report
               </IonLabel>
               <IonInput
@@ -173,13 +173,13 @@ const AdminReports: React.FC = () => {
         </IonCard>
 
         {/* Batch Rent Generation */}
-        <IonCard style={{ margin: '0 0 16px 0', borderRadius: '20px', border: '1px solid #e2e8f0', boxShadow: '0 4px 16px rgba(0,0,0,0.03)' }}>
+        <IonCard style={{ margin: '0 0 16px 0', borderRadius: '20px', border: '1px solid rgba(255, 255, 255, 0.08)', boxShadow: '0 4px 16px rgba(0,0,0,0.03)' }}>
           <IonCardContent style={{ padding: '20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
               <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#fef3c7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <IonIcon icon={calendarOutline} style={{ color: '#d97706', fontSize: '20px' }} />
               </div>
-              <h2 style={{ fontSize: '17px', fontWeight: '800', margin: 0, color: '#0f172a' }}>
+              <h2 style={{ fontSize: '17px', fontWeight: '800', margin: 0, color: '#ffffff' }}>
                 Generate Monthly Rent Records
               </h2>
             </div>
@@ -188,7 +188,7 @@ const AdminReports: React.FC = () => {
             </p>
 
             <IonItem lines="inset" style={{ '--padding-start': '0', marginBottom: '16px' }}>
-              <IonLabel position="stacked" style={{ fontWeight: '700', color: '#334155' }}>
+              <IonLabel position="stacked" style={{ fontWeight: '700', color: '#cbd5e1' }}>
                 Billing Cycle Month
               </IonLabel>
               <IonInput
@@ -206,13 +206,13 @@ const AdminReports: React.FC = () => {
         </IonCard>
 
         {/* Send Broadcast Notification */}
-        <IonCard style={{ margin: '0 0 16px 0', borderRadius: '20px', border: '1px solid #e2e8f0', boxShadow: '0 4px 16px rgba(0,0,0,0.03)' }}>
+        <IonCard style={{ margin: '0 0 16px 0', borderRadius: '20px', border: '1px solid rgba(255, 255, 255, 0.08)', boxShadow: '0 4px 16px rgba(0,0,0,0.03)' }}>
           <IonCardContent style={{ padding: '20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
               <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#ecfdf5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <IonIcon icon={megaphoneOutline} style={{ color: '#059669', fontSize: '20px' }} />
               </div>
-              <h2 style={{ fontSize: '17px', fontWeight: '800', margin: 0, color: '#0f172a' }}>
+              <h2 style={{ fontSize: '17px', fontWeight: '800', margin: 0, color: '#ffffff' }}>
                 Send Broadcast Notification
               </h2>
             </div>
@@ -222,7 +222,7 @@ const AdminReports: React.FC = () => {
 
             <form onSubmit={handleSendBroadcastNotification}>
               <IonItem lines="inset" style={{ '--padding-start': '0', marginBottom: '10px' }}>
-                <IonLabel position="stacked" style={{ fontWeight: '700', color: '#334155' }}>Target Audience</IonLabel>
+                <IonLabel position="stacked" style={{ fontWeight: '700', color: '#cbd5e1' }}>Target Audience</IonLabel>
                 <IonSelect value={targetResident} onIonChange={(e) => setTargetResident(e.detail.value)}>
                   <IonSelectOption value="">All Active Residents (Broadcast)</IonSelectOption>
                   {residents.map((r) => (
@@ -234,7 +234,7 @@ const AdminReports: React.FC = () => {
               </IonItem>
 
               <IonItem lines="inset" style={{ '--padding-start': '0', marginBottom: '10px' }}>
-                <IonLabel position="stacked" style={{ fontWeight: '700', color: '#334155' }}>Notice Title *</IonLabel>
+                <IonLabel position="stacked" style={{ fontWeight: '700', color: '#cbd5e1' }}>Notice Title *</IonLabel>
                 <IonInput
                   required
                   placeholder="e.g. Water Tank Maintenance, Rent Due Alert"
@@ -244,7 +244,7 @@ const AdminReports: React.FC = () => {
               </IonItem>
 
               <IonItem lines="inset" style={{ '--padding-start': '0', marginBottom: '16px' }}>
-                <IonLabel position="stacked" style={{ fontWeight: '700', color: '#334155' }}>Message *</IonLabel>
+                <IonLabel position="stacked" style={{ fontWeight: '700', color: '#cbd5e1' }}>Message *</IonLabel>
                 <IonInput
                   required
                   placeholder="Write message content for residents..."
@@ -274,4 +274,5 @@ const AdminReports: React.FC = () => {
 };
 
 export default AdminReports;
+
 

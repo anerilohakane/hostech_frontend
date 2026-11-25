@@ -54,7 +54,7 @@ const ResidentPayments: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="primary">
+        <IonToolbar>
           <IonTitle>Payment Records</IonTitle>
         </IonToolbar>
         <IonSegment value={tab} onIonChange={(e) => setTab(e.detail.value as any)}>
@@ -70,7 +70,7 @@ const ResidentPayments: React.FC = () => {
         </IonSegment>
       </IonHeader>
 
-      <IonContent className="ion-padding" style={{ '--background': '#f8fafc' }}>
+      <IonContent className="ion-padding" style={{ '--background': '#090c12' }}>
         <IonRefresher slot="fixed" onIonRefresh={doRefresh}>
           <IonRefresherContent />
         </IonRefresher>
@@ -78,11 +78,11 @@ const ResidentPayments: React.FC = () => {
         {tab === 'rent' && (
           <div>
             {rentRecords.map((r) => (
-              <IonCard key={r._id} style={{ margin: '0 0 14px 0', border: '1px solid #e2e8f0' }}>
+              <IonCard key={r._id} style={{ margin: '0 0 14px 0', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
                 <IonCardContent style={{ padding: '16px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div>
-                      <h3 style={{ fontSize: '18px', fontWeight: '800', color: '#0f172a', margin: '0 0 4px 0' }}>
+                      <h3 style={{ fontSize: '18px', fontWeight: '800', color: '#ffffff', margin: '0 0 4px 0' }}>
                         {r.rentMonth}
                       </h3>
                       <p style={{ margin: 0, fontSize: '13px', color: '#64748b' }}>
@@ -115,17 +115,17 @@ const ResidentPayments: React.FC = () => {
         {tab === 'receipts' && (
           <div>
             {receipts.map((rec) => (
-              <IonCard key={rec._id} style={{ margin: '0 0 14px 0', border: '1px solid #e2e8f0' }}>
+              <IonCard key={rec._id} style={{ margin: '0 0 14px 0', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
                 <IonCardContent style={{ padding: '16px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div>
-                      <h4 style={{ margin: '0 0 2px 0', fontWeight: '800', fontSize: '15px', color: '#0f172a' }}>
+                      <h4 style={{ margin: '0 0 2px 0', fontWeight: '800', fontSize: '15px', color: '#ffffff' }}>
                         {rec.receiptNumber}
                       </h4>
                       <p style={{ margin: 0, fontSize: '12px', color: '#64748b' }}>
                         Month: {rec.rentMonth} • Method: {rec.paymentMethod}
                       </p>
-                      <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#475569' }}>
+                      <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#94a3b8' }}>
                         Date: {new Date(rec.paymentDate).toLocaleDateString('en-IN')}
                       </p>
                     </div>
@@ -142,9 +142,8 @@ const ResidentPayments: React.FC = () => {
                         onClick={async () => {
                           try {
                             await paymentService.downloadReceiptPdf(rec._id, rec.receiptNumber);
-                          } catch (e) {
-                            // Fallback to opening authenticated URL directly in browser tab
-                            window.open(paymentService.getReceiptPdfUrl(rec._id), '_blank');
+                          } catch {
+                            window.alert('Unable to download this receipt. Please try again.');
                           }
                         }}
                       >
@@ -170,17 +169,17 @@ const ResidentPayments: React.FC = () => {
         {tab === 'submissions' && (
           <div>
             {submissions.map((sub) => (
-              <IonCard key={sub._id} style={{ margin: '0 0 14px 0', border: '1px solid #e2e8f0' }}>
+              <IonCard key={sub._id} style={{ margin: '0 0 14px 0', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
                 <IonCardContent style={{ padding: '16px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div>
-                      <h4 style={{ margin: '0 0 2px 0', fontWeight: '800', fontSize: '15px', color: '#0f172a' }}>
+                      <h4 style={{ margin: '0 0 2px 0', fontWeight: '800', fontSize: '15px', color: '#ffffff' }}>
                         ₹{sub.amount.toLocaleString('en-IN')} ({sub.rentMonth})
                       </h4>
                       <p style={{ margin: 0, fontSize: '12px', color: '#64748b' }}>
                         Method: {sub.paymentMethod} • Txn: {sub.transactionId || 'None'}
                       </p>
-                      <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#475569' }}>
+                      <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#94a3b8' }}>
                         Submitted: {new Date(sub.paymentDate).toLocaleDateString()}
                       </p>
                     </div>
@@ -206,4 +205,5 @@ const ResidentPayments: React.FC = () => {
 };
 
 export default ResidentPayments;
+
 

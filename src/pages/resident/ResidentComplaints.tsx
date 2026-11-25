@@ -78,15 +78,15 @@ const ResidentComplaints: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="primary">
+        <IonToolbar>
           <IonTitle>My Complaints</IonTitle>
         </IonToolbar>
       </IonHeader>
 
-      <IonContent className="ion-padding" style={{ '--background': '#f8fafc' }}>
+      <IonContent className="ion-padding" style={{ '--background': '#090c12' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
           <div>
-            <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '800', color: '#0f172a' }}>
+            <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '800', color: '#ffffff' }}>
               Maintenance Tickets
             </h3>
             <p style={{ margin: 0, fontSize: '12px', color: '#64748b' }}>
@@ -101,11 +101,11 @@ const ResidentComplaints: React.FC = () => {
         </div>
 
         {complaints.map((c) => (
-          <IonCard key={c._id} style={{ margin: '0 0 14px 0', border: '1px solid #e2e8f0' }}>
+          <IonCard key={c._id} style={{ margin: '0 0 14px 0', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
             <IonCardContent style={{ padding: '16px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div>
-                  <h4 style={{ margin: '0 0 2px 0', fontSize: '15px', fontWeight: '800', color: '#0f172a' }}>
+                  <h4 style={{ margin: '0 0 2px 0', fontSize: '15px', fontWeight: '800', color: '#ffffff' }}>
                     {c.title}
                   </h4>
                   <p style={{ margin: 0, fontSize: '12px', color: '#2563eb', fontWeight: 600 }}>
@@ -128,12 +128,12 @@ const ResidentComplaints: React.FC = () => {
                 </IonBadge>
               </div>
 
-              <p style={{ fontSize: '13px', color: '#334155', margin: '10px 0' }}>
+              <p style={{ fontSize: '13px', color: '#cbd5e1', margin: '10px 0' }}>
                 {c.description}
               </p>
 
               {c.adminRemarks && (
-                <div style={{ background: '#f1f5f9', padding: '8px 12px', borderRadius: '8px', fontSize: '12px', color: '#475569' }}>
+                <div style={{ background: '#f1f5f9', padding: '8px 12px', borderRadius: '8px', fontSize: '12px', color: '#94a3b8' }}>
                   <strong>Admin Response:</strong> {c.adminRemarks}
                 </div>
               )}
@@ -156,7 +156,7 @@ const ResidentComplaints: React.FC = () => {
         {/* Raise Issue Modal */}
         <IonModal isOpen={modalOpen} onDidDismiss={() => setModalOpen(false)}>
           <IonHeader>
-            <IonToolbar color="primary">
+            <IonToolbar>
               <IonTitle>Raise Complaint</IonTitle>
               <IonButtons slot="end">
                 <IonButton onClick={() => setModalOpen(false)} style={{ color: '#ffffff', fontWeight: 800 }}>
@@ -245,4 +245,5 @@ const ResidentComplaints: React.FC = () => {
 };
 
 export default ResidentComplaints;
+
 

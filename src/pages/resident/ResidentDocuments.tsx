@@ -79,15 +79,15 @@ const ResidentDocuments: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="primary">
+        <IonToolbar>
           <IonTitle>My Identity Documents</IonTitle>
         </IonToolbar>
       </IonHeader>
 
-      <IonContent className="ion-padding" style={{ '--background': '#f8fafc' }}>
+      <IonContent className="ion-padding" style={{ '--background': '#090c12' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
           <div>
-            <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '800', color: '#0f172a' }}>
+            <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '800', color: '#ffffff' }}>
               Verification Documents
             </h3>
             <p style={{ margin: 0, fontSize: '12px', color: '#64748b' }}>
@@ -102,18 +102,18 @@ const ResidentDocuments: React.FC = () => {
         </div>
 
         {documents.map((d) => (
-          <IonCard key={d._id} style={{ margin: '0 0 14px 0', border: '1px solid #e2e8f0' }}>
+          <IonCard key={d._id} style={{ margin: '0 0 14px 0', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
             <IonCardContent style={{ padding: '16px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div>
-                  <h4 style={{ margin: '0 0 2px 0', fontSize: '15px', fontWeight: '800', color: '#0f172a' }}>
+                  <h4 style={{ margin: '0 0 2px 0', fontSize: '15px', fontWeight: '800', color: '#ffffff' }}>
                     {d.documentName}
                   </h4>
                   <p style={{ margin: '0 0 4px 0', fontSize: '13px', color: '#2563eb', fontWeight: 600 }}>
                     {d.category}
                   </p>
                   {d.documentNumberMasked && (
-                    <p style={{ margin: 0, fontSize: '12px', color: '#475569' }}>
+                    <p style={{ margin: 0, fontSize: '12px', color: '#94a3b8' }}>
                       ID Number: <code>{d.documentNumberMasked}</code>
                     </p>
                   )}
@@ -170,7 +170,7 @@ const ResidentDocuments: React.FC = () => {
         {/* Upload Modal */}
         <IonModal isOpen={modalOpen} onDidDismiss={() => setModalOpen(false)}>
           <IonHeader>
-            <IonToolbar color="primary">
+            <IonToolbar>
               <IonTitle>Upload Identity Document</IonTitle>
               <IonButtons slot="end">
                 <IonButton onClick={() => setModalOpen(false)} style={{ color: '#ffffff', fontWeight: 800 }}>
@@ -216,7 +216,7 @@ const ResidentDocuments: React.FC = () => {
               </IonItem>
 
               <div style={{ marginBottom: '24px' }}>
-                <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#475569', marginBottom: '6px' }}>
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#94a3b8', marginBottom: '6px' }}>
                   Select File (PDF or Image, max 10MB) *
                 </label>
                 <input
@@ -265,4 +265,5 @@ const ResidentDocuments: React.FC = () => {
 };
 
 export default ResidentDocuments;
+
 

@@ -67,7 +67,7 @@ const AdminComplaints: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="primary">
+        <IonToolbar>
           <IonTitle>Complaints Management</IonTitle>
         </IonToolbar>
         <IonSegment value={statusFilter} onIonChange={(e) => setStatusFilter(e.detail.value as any)}>
@@ -86,16 +86,16 @@ const AdminComplaints: React.FC = () => {
         </IonSegment>
       </IonHeader>
 
-      <IonContent className="ion-padding" style={{ '--background': '#f8fafc' }}>
+      <IonContent className="ion-padding" style={{ '--background': '#090c12' }}>
         {complaints.map((c) => (
-          <IonCard key={c._id} style={{ margin: '0 0 16px 0', border: '1px solid #e2e8f0' }}>
+          <IonCard key={c._id} style={{ margin: '0 0 16px 0', background: '#111723', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
             <IonCardContent style={{ padding: '16px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div>
-                  <h3 style={{ fontSize: '16px', fontWeight: '800', margin: '0 0 4px 0', color: '#0f172a' }}>
+                  <h3 style={{ fontSize: '16px', fontWeight: '800', margin: '0 0 4px 0', color: '#ffffff' }}>
                     {c.title}
                   </h3>
-                  <p style={{ margin: 0, fontSize: '13px', color: '#64748b' }}>
+                  <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>
                     {c.residentId?.fullName} • Room {c.roomId?.roomNumber || 'N/A'} • {c.category}
                   </p>
                 </div>
@@ -115,19 +115,19 @@ const AdminComplaints: React.FC = () => {
                 </IonBadge>
               </div>
 
-              <p style={{ fontSize: '14px', color: '#334155', margin: '12px 0' }}>
+              <p style={{ fontSize: '14px', color: '#cbd5e1', margin: '12px 0' }}>
                 {c.description}
               </p>
 
               {c.adminRemarks && (
-                <div style={{ background: '#f1f5f9', padding: '8px 12px', borderRadius: '8px', fontSize: '12px', color: '#475569' }}>
+                <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '8px 12px', borderRadius: '8px', fontSize: '12px', color: '#cbd5e1' }}>
                   <strong>Admin Note:</strong> {c.adminRemarks}
                 </div>
               )}
 
               <div style={{ marginTop: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontSize: '12px', color: '#94a3b8' }}>
-                  Priority: <strong style={{ color: '#0f172a' }}>{c.priority}</strong> • {new Date(c.createdAt).toLocaleDateString()}
+                  Priority: <strong style={{ color: '#a3e635' }}>{c.priority}</strong> • {new Date(c.createdAt).toLocaleDateString()}
                 </span>
                 <IonButton
                   size="small"
@@ -157,7 +157,7 @@ const AdminComplaints: React.FC = () => {
         {/* Update Complaint Modal */}
         <IonModal isOpen={modalOpen} onDidDismiss={() => setModalOpen(false)}>
           <IonHeader>
-            <IonToolbar color="primary">
+            <IonToolbar>
               <IonTitle>Update Complaint</IonTitle>
               <IonButtons slot="end">
                 <IonButton onClick={() => setModalOpen(false)} style={{ color: '#ffffff', fontWeight: 800 }}>

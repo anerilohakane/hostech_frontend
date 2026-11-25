@@ -18,6 +18,9 @@ import {
   IonItem,
   IonLabel,
   IonIcon,
+  IonGrid,
+  IonRow,
+  IonCol,
 } from '@ionic/react';
 import { businessOutline, personOutline, peopleOutline, closeOutline } from 'ionicons/icons';
 import { propertyService, roomService } from '../../services';
@@ -32,7 +35,7 @@ const AdminRooms: React.FC = () => {
   const [propModalOpen, setPropModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  // New Property Form
+  // New Property Form (Full property details & Admin credentials)
   const [propForm, setPropForm] = useState({
     name: '',
     pgType: 'Coliving',
@@ -42,6 +45,11 @@ const AdminRooms: React.FC = () => {
     pincode: '560103',
     contactPerson: '',
     contactNumber: '',
+    description: '',
+    adminName: '',
+    adminEmail: '',
+    adminPhone: '',
+    adminPassword: '',
   });
 
   // New Flexible Room Form
@@ -115,7 +123,7 @@ const AdminRooms: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="primary">
+        <IonToolbar>
           <IonTitle>Rooms & Allocations</IonTitle>
           <IonButtons slot="end">
             <IonButton onClick={() => setPropModalOpen(true)}>+ New PG</IonButton>
@@ -123,7 +131,7 @@ const AdminRooms: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      <IonContent className="ion-padding" style={{ '--background': '#f8fafc' }}>
+      <IonContent className="ion-padding" style={{ '--background': '#090c12' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
           <div style={{ flex: 1, marginRight: '8px' }}>
             <IonSelect
@@ -157,8 +165,8 @@ const AdminRooms: React.FC = () => {
             style={{
               margin: '0 0 16px 0',
               borderRadius: '20px',
-              border: '1px solid #e2e8f0',
-              background: '#ffffff',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              background: '#111723',
               boxShadow: '0 4px 14px rgba(15, 23, 42, 0.03)',
             }}
           >
@@ -166,7 +174,7 @@ const AdminRooms: React.FC = () => {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <h3 style={{ fontSize: '18px', fontWeight: '800', margin: 0, color: '#0f172a' }}>
+                    <h3 style={{ fontSize: '18px', fontWeight: '800', margin: 0, color: '#ffffff' }}>
                       Room {r.roomNumber}
                     </h3>
                     <IonBadge color={r.rentalType === 'Full Room (Single Tenant)' ? 'tertiary' : 'primary'}>
@@ -220,7 +228,7 @@ const AdminRooms: React.FC = () => {
                         }}
                       >
                         <div>
-                          <strong style={{ color: '#0f172a' }}>{occ.fullName}</strong> ({occ.phone})
+                          <strong style={{ color: '#ffffff' }}>{occ.fullName}</strong> ({occ.phone})
                         </div>
                         <div style={{ fontWeight: '700', color: '#16a34a' }}>
                           ₹{occ.monthlyRent?.toLocaleString('en-IN')}/mo
@@ -241,7 +249,7 @@ const AdminRooms: React.FC = () => {
         {/* Add Room Modal */}
         <IonModal isOpen={roomModalOpen} onDidDismiss={() => setRoomModalOpen(false)}>
           <IonHeader>
-            <IonToolbar color="primary">
+            <IonToolbar>
               <IonTitle>Add Flexible Room</IonTitle>
               <IonButtons slot="end">
                 <IonButton onClick={() => setRoomModalOpen(false)} style={{ color: '#ffffff', fontWeight: 800 }}>
@@ -326,8 +334,8 @@ const AdminRooms: React.FC = () => {
         {/* Add PG Property Modal */}
         <IonModal isOpen={propModalOpen} onDidDismiss={() => setPropModalOpen(false)}>
           <IonHeader>
-            <IonToolbar color="primary">
-              <IonTitle>Add PG Property</IonTitle>
+            <IonToolbar>
+              <IonTitle>Register New PG Property</IonTitle>
               <IonButtons slot="end">
                 <IonButton onClick={() => setPropModalOpen(false)} style={{ color: '#ffffff', fontWeight: 800 }}>
                   <IonIcon icon={closeOutline} slot="start" style={{ fontSize: '20px' }} />
@@ -338,40 +346,138 @@ const AdminRooms: React.FC = () => {
           </IonHeader>
           <IonContent className="ion-padding" style={{ '--padding-bottom': 'calc(env(safe-area-inset-bottom, 24px) + 50px)' }}>
             <form onSubmit={handleCreateProperty} style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 24px) + 50px)' }}>
+              {/* Section 1: Property Details */}
+              <div style={{ marginBottom: '16px' }}>
+                <span style={{ fontSize: '11px', fontWeight: 800, color: '#a3e635', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                  STEP 1: PROPERTY INFORMATION
+                </span>
+              </div>
+
               <IonItem lines="inset" style={{ '--padding-start': '0' }}>
                 <IonLabel position="stacked">PG Property Name *</IonLabel>
                 <IonInput
                   required
+                  placeholder="e.g. HostTech Silicon Living"
                   value={propForm.name}
                   onIonChange={(e) => setPropForm({ ...propForm, name: e.detail.value! })}
                 />
               </IonItem>
+
               <IonItem lines="inset" style={{ '--padding-start': '0' }}>
-                <IonLabel position="stacked">Address *</IonLabel>
+                <IonLabel position="stacked">PG Stay Type *</IonLabel>
+                <IonSelect
+                  value={propForm.pgType}
+                  onIonChange={(e) => setPropForm({ ...propForm, pgType: e.detail.value })}
+                >
+                  <IonSelectOption value="Coliving">Coliving (Unisex / Mixed)</IonSelectOption>
+                  <IonSelectOption value="Gents">Gents PG / Hostel</IonSelectOption>
+                  <IonSelectOption value="Ladies">Ladies PG / Hostel</IonSelectOption>
+                </IonSelect>
+              </IonItem>
+
+              <IonItem lines="inset" style={{ '--padding-start': '0' }}>
+                <IonLabel position="stacked">Full Address *</IonLabel>
                 <IonInput
                   required
+                  placeholder="Street, Landmark, Area"
                   value={propForm.address}
                   onIonChange={(e) => setPropForm({ ...propForm, address: e.detail.value! })}
                 />
               </IonItem>
+
+              <IonGrid style={{ padding: 0 }}>
+                <IonRow>
+                  <IonCol size="6">
+                    <IonItem lines="inset" style={{ '--padding-start': '0' }}>
+                      <IonLabel position="stacked">City *</IonLabel>
+                      <IonInput
+                        required
+                        value={propForm.city}
+                        onIonChange={(e) => setPropForm({ ...propForm, city: e.detail.value! })}
+                      />
+                    </IonItem>
+                  </IonCol>
+                  <IonCol size="6">
+                    <IonItem lines="inset" style={{ '--padding-start': '0' }}>
+                      <IonLabel position="stacked">Pincode *</IonLabel>
+                      <IonInput
+                        required
+                        value={propForm.pincode}
+                        onIonChange={(e) => setPropForm({ ...propForm, pincode: e.detail.value! })}
+                      />
+                    </IonItem>
+                  </IonCol>
+                </IonRow>
+              </IonGrid>
+
               <IonItem lines="inset" style={{ '--padding-start': '0' }}>
-                <IonLabel position="stacked">Contact Person *</IonLabel>
+                <IonLabel position="stacked">State *</IonLabel>
                 <IonInput
                   required
-                  value={propForm.contactPerson}
-                  onIonChange={(e) => setPropForm({ ...propForm, contactPerson: e.detail.value! })}
+                  value={propForm.state}
+                  onIonChange={(e) => setPropForm({ ...propForm, state: e.detail.value! })}
                 />
               </IonItem>
+
+              {/* Section 2: Property Admin Credentials */}
+              <div style={{ margin: '22px 0 12px 0', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '16px' }}>
+                <span style={{ fontSize: '11px', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                  STEP 2: PROPERTY ADMIN LOGIN CREDENTIALS
+                </span>
+                <p style={{ fontSize: '12px', color: '#94a3b8', margin: '4px 0 0 0' }}>
+                  This admin will be able to log in and manage this PG property, its rooms, residents & payments.
+                </p>
+              </div>
+
               <IonItem lines="inset" style={{ '--padding-start': '0' }}>
-                <IonLabel position="stacked">Contact Number *</IonLabel>
+                <IonLabel position="stacked">Admin Full Name *</IonLabel>
                 <IonInput
                   required
-                  value={propForm.contactNumber}
-                  onIonChange={(e) => setPropForm({ ...propForm, contactNumber: e.detail.value! })}
+                  placeholder="e.g. Ramesh Kumar (Property Manager)"
+                  value={propForm.adminName}
+                  onIonChange={(e) =>
+                    setPropForm({ ...propForm, adminName: e.detail.value!, contactPerson: e.detail.value! })
+                  }
                 />
               </IonItem>
-              <IonButton expand="block" type="submit" color="primary" style={{ marginTop: '20px', height: '48px' }}>
-                Save Property
+
+              <IonItem lines="inset" style={{ '--padding-start': '0' }}>
+                <IonLabel position="stacked">Admin Login Email *</IonLabel>
+                <IonInput
+                  type="email"
+                  required
+                  placeholder="admin.property@hosttech.com"
+                  value={propForm.adminEmail}
+                  onIonChange={(e) => setPropForm({ ...propForm, adminEmail: e.detail.value! })}
+                />
+              </IonItem>
+
+              <IonItem lines="inset" style={{ '--padding-start': '0' }}>
+                <IonLabel position="stacked">Admin Contact Phone / Mobile *</IonLabel>
+                <IonInput
+                  type="tel"
+                  required
+                  placeholder="10-digit mobile number"
+                  value={propForm.adminPhone}
+                  onIonChange={(e) =>
+                    setPropForm({ ...propForm, adminPhone: e.detail.value!, contactNumber: e.detail.value! })
+                  }
+                />
+              </IonItem>
+
+              <IonItem lines="inset" style={{ '--padding-start': '0' }}>
+                <IonLabel position="stacked">Admin Login Password *</IonLabel>
+                <IonInput
+                  type="password"
+                  required
+                  placeholder="Set secure password (min 6 chars)"
+                  value={propForm.adminPassword}
+                  onIonChange={(e) => setPropForm({ ...propForm, adminPassword: e.detail.value! })}
+                />
+              </IonItem>
+
+              <IonButton expand="block" type="submit" color="primary" style={{ marginTop: '24px', height: '50px', fontWeight: 800 }}>
+                Register Property & Admin Account
               </IonButton>
             </form>
           </IonContent>
@@ -390,3 +496,4 @@ const AdminRooms: React.FC = () => {
 };
 
 export default AdminRooms;
+

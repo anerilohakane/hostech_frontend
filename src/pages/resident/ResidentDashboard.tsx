@@ -1,39 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import {
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-  IonCard,
-  IonCardContent,
-  IonButton,
-  IonIcon,
-  IonBadge,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonRefresher,
-  IonRefresherContent,
-  IonButtons,
+  IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon,
+  IonCard, IonCardContent, IonRefresher, IonRefresherContent, IonButtons,
 } from '@ionic/react';
 import {
-  cashOutline,
-  cardOutline,
-  documentTextOutline,
-  chatbubbleEllipsesOutline,
-  notificationsOutline,
-  logOutOutline,
-  alertCircleOutline,
-  checkmarkCircleOutline,
-  homeOutline,
-  arrowForwardOutline,
-  shieldCheckmarkOutline,
-  sparklesOutline,
+  cardOutline, documentTextOutline, chatbubbleEllipsesOutline, notificationsOutline,
+  logOutOutline, homeOutline, shieldCheckmarkOutline, calendarOutline, arrowForwardOutline,
+  wifiOutline, restaurantOutline,
 } from 'ionicons/icons';
 import { rentService, paymentService, authService } from '../../services';
 import { useAuth } from '../../context/AuthContext';
 import { useHistory } from 'react-router-dom';
+import './ResidentDashboard.css';
 
 const ResidentDashboard: React.FC = () => {
   const [profile, setProfile] = useState<any>(null);
@@ -46,297 +24,86 @@ const ResidentDashboard: React.FC = () => {
   const loadData = async () => {
     try {
       const [meRes, rentRes, receiptsRes] = await Promise.all([
-        authService.getMe(),
-        rentService.getRentRecords(),
-        paymentService.getReceipts(),
+        authService.getMe(), rentService.getRentRecords(), paymentService.getReceipts(),
       ]);
       setProfile(meRes.residentProfile);
-
-      if (rentRes && rentRes.length > 0) {
-        const pending = rentRes.find((r: any) => r.status !== 'Paid');
-        setCurrentRent(pending || rentRes[0]);
-      }
-      if (receiptsRes && receiptsRes.length > 0) {
-        setRecentReceipt(receiptsRes[0]);
-      }
-    } catch (err) {
-      console.error(err);
+      if (rentRes?.length) setCurrentRent(rentRes.find((rent: any) => rent.status !== 'Paid') || rentRes[0]);
+      if (receiptsRes?.length) setRecentReceipt(receiptsRes[0]);
+    } catch (error) {
+      console.error(error);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  const doRefresh = async (event: CustomEvent) => {
-    await loadData();
-    event.detail.complete();
-  };
-
-  const isDue = currentRent && currentRent.outstandingAmount > 0;
+  useEffect(() => { loadData(); }, []);
+  const doRefresh = async (event: CustomEvent) => { await loadData(); event.detail.complete(); };
+  const outstanding = currentRent?.outstandingAmount ?? 0;
+  const rentIsDue = outstanding > 0;
+  const roomNumber = profile?.roomId?.roomNumber;
 
   return (
-    <IonPage>
+    <IonPage className="resident-dashboard">
       <IonHeader>
-        <IonToolbar>
-          <IonTitle>Resident Hub</IonTitle>
+        <IonToolbar className="dashboard-toolbar">
+          <div className="dashboard-brand">
+            <div className="brand-wordmark"><strong>Host<span>Tech</span></strong></div>
+          </div>
           <IonButtons slot="end">
-            <IonButton fill="clear" onClick={() => history.push('/resident/notifications')}>
-              <IonIcon icon={notificationsOutline} slot="icon-only" style={{ color: '#fff' }} />
-            </IonButton>
-            <IonButton
-              fill="clear"
-              onClick={() => {
-                logout();
-                history.replace('/login');
-              }}
-            >
-              <IonIcon icon={logOutOutline} slot="icon-only" style={{ color: '#fff' }} />
-            </IonButton>
+            <IonButton fill="clear" onClick={() => history.push('/resident/notifications')} aria-label="Notifications"><IonIcon icon={notificationsOutline} slot="icon-only" /></IonButton>
+            <IonButton fill="clear" onClick={() => { logout(); history.replace('/login'); }} aria-label="Log out"><IonIcon icon={logOutOutline} slot="icon-only" /></IonButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
-
-      <IonContent fullscreen className="ion-padding" style={{ '--background': '#f8fafc' }}>
-        <IonRefresher slot="fixed" onIonRefresh={doRefresh}>
-          <IonRefresherContent />
-        </IonRefresher>
-
-        {/* Accommodation Header Pill */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            background: '#ffffff',
-            borderRadius: '20px',
-            padding: '16px 20px',
-            marginBottom: '16px',
-            border: '1px solid #f1f5f9',
-            boxShadow: '0 4px 14px rgba(0,0,0,0.03)',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <div
-              style={{
-                width: '48px',
-                height: '48px',
-                borderRadius: '16px',
-                background: 'linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 8px 16px -2px rgba(79, 70, 229, 0.3)',
-              }}
-            >
-              <IonIcon icon={homeOutline} style={{ color: '#fff', fontSize: '24px' }} />
+      <IonContent className="dashboard-content">
+        <IonRefresher slot="fixed" onIonRefresh={doRefresh}><IonRefresherContent /></IonRefresher>
+        <main className="resident-main">
+          <section className="resident-welcome">
+            <div className="resident-welcome-copy">
+              <span className="resident-kicker"><IonIcon icon={shieldCheckmarkOutline} /> YOUR RESIDENCE</span>
+              <h1>Hi, {profile?.fullName?.split(' ')[0] || user?.name?.split(' ')[0] || 'there'}</h1>
+              <p>Everything you need for a comfortable stay.</p>
             </div>
-            <div>
-              <div style={{ fontSize: '12px', fontWeight: 700, color: '#64748b' }}>MY RESIDENCY</div>
-              <h2 style={{ fontSize: '17px', fontWeight: '800', margin: '2px 0 0 0', color: '#0f172a' }}>
-                {profile?.fullName || user?.name || 'Resident'}
-              </h2>
+            <div className="room-pill"><IonIcon icon={homeOutline} /> {roomNumber ? `Room ${roomNumber}` : 'Room details'}</div>
+          </section>
+
+          <section className={`rent-summary ${rentIsDue ? 'rent-due' : 'rent-clear'}`}>
+            <div className="rent-summary-top">
+              <div><span className="section-kicker">RENT & BILLING</span><h2>{rentIsDue ? 'Your rent is due' : 'You’re all caught up'}</h2></div>
+              <span className={`rent-status ${rentIsDue ? 'status-due' : 'status-paid'}`}>{currentRent?.status || (loading ? 'Checking' : 'Paid')}</span>
             </div>
-          </div>
-          <div style={{ textAlign: 'right' }}>
-            <span
-              style={{
-                background: '#eff6ff',
-                color: '#2563eb',
-                fontWeight: 800,
-                fontSize: '12px',
-                padding: '4px 10px',
-                borderRadius: '8px',
-                border: '1px solid #dbeafe',
-              }}
-            >
-              Room {profile?.roomId?.roomNumber || '101'}
-            </span>
-          </div>
-        </div>
-
-        {/* HERO CARD: "Rent Due" */}
-        <div
-          style={{
-            background: isDue
-              ? 'linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #4338ca 100%)'
-              : 'linear-gradient(135deg, #064e3b 0%, #065f46 40%, #059669 100%)',
-            borderRadius: '24px',
-            padding: '24px',
-            color: '#fff',
-            boxShadow: isDue
-              ? '0 16px 32px -4px rgba(49, 46, 129, 0.35)'
-              : '0 16px 32px -4px rgba(5, 150, 105, 0.35)',
-            marginBottom: '20px',
-            position: 'relative',
-            overflow: 'hidden',
-          }}
-        >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-            <span style={{ fontSize: '11px', letterSpacing: '0.08em', textTransform: 'uppercase', color: '#a5b4fc', fontWeight: '800' }}>
-              MONTHLY RENT • {currentRent?.rentMonth || 'Current Month'}
-            </span>
-            <span
-              className={
-                currentRent?.status === 'Paid'
-                  ? 'badge-tag badge-paid'
-                  : currentRent?.status === 'Verification Pending'
-                  ? 'badge-tag badge-pending'
-                  : 'badge-tag badge-overdue'
-              }
-            >
-              {currentRent?.status || 'Unpaid'}
-            </span>
-          </div>
-
-          <div style={{ margin: '14px 0' }}>
-            <div style={{ fontSize: '13px', color: '#c7d2fe', fontWeight: 600 }}>Total Balance Outstanding</div>
-            <div style={{ fontSize: '36px', fontWeight: '800', letterSpacing: '-0.03em', margin: '4px 0' }}>
-              ₹{currentRent?.outstandingAmount?.toLocaleString('en-IN') ?? 0}
+            <div className="rent-amount">₹{outstanding.toLocaleString('en-IN')}</div>
+            <div className="rent-due-date"><IonIcon icon={calendarOutline} /> {currentRent?.dueDate ? `Due ${new Date(currentRent.dueDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}` : 'Current balance'}</div>
+            <div className="rent-actions">
+              {rentIsDue && <IonButton onClick={() => history.push('/resident/pay')}><IonIcon icon={cardOutline} slot="start" /> Pay rent</IonButton>}
+              <IonButton fill="outline" onClick={() => history.push('/resident/payments')}>Payment history</IonButton>
             </div>
-            <div style={{ fontSize: '12px', color: '#a5b4fc' }}>
-              Due by: <strong>{currentRent?.dueDate ? new Date(currentRent.dueDate).toLocaleDateString() : '5th of month'}</strong>
+          </section>
+
+          <section className="resident-services">
+            <div className="resident-section-title"><div><span className="section-kicker">AT YOUR FINGERTIPS</span><h2>Quick services</h2></div><span>Available anytime</span></div>
+            <div className="resident-service-grid">
+              <button className="resident-service" onClick={() => history.push('/resident/payments')}><span className="service-icon service-teal"><IonIcon icon={documentTextOutline} /></span><strong>Receipts</strong><small>Payments & history</small></button>
+              <button className="resident-service" onClick={() => history.push('/resident/complaints')}><span className="service-icon service-clay"><IonIcon icon={chatbubbleEllipsesOutline} /></span><strong>Get help</strong><small>Requests & complaints</small></button>
+              <button className="resident-service" onClick={() => history.push('/resident/documents')}><span className="service-icon service-sage"><IonIcon icon={shieldCheckmarkOutline} /></span><strong>Documents</strong><small>Agreements & KYC</small></button>
+              <button className="resident-service" onClick={() => history.push('/resident/profile')}><span className="service-icon service-sand"><IonIcon icon={homeOutline} /></span><strong>My room</strong><small>Stay & profile details</small></button>
             </div>
-          </div>
+          </section>
 
-          <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
-            <IonButton
-              expand="block"
-              onClick={() => history.push('/resident/pay')}
-              style={{
-                flex: 1,
-                height: '48px',
-                '--background': '#ffffff',
-                '--color': '#312e81',
-                fontWeight: 800,
-                '--border-radius': '14px',
-                boxShadow: '0 8px 18px rgba(0,0,0,0.15)',
-              }}
-            >
-              <IonIcon icon={cardOutline} slot="start" />
-              Pay Rent via UPI
-            </IonButton>
-            <IonButton
-              fill="outline"
-              onClick={() => history.push('/resident/payments')}
-              style={{
-                height: '48px',
-                '--color': '#ffffff',
-                '--border-color': 'rgba(255,255,255,0.4)',
-                '--border-radius': '14px',
-              }}
-            >
-              Ledger
-            </IonButton>
-          </div>
-        </div>
+          <section className="resident-life">
+            <div className="resident-section-title"><div><span className="section-kicker">MAKE YOURSELF AT HOME</span><h2>Life around here</h2></div></div>
+            <div className="resident-life-cards">
+              <article className="resident-life-card" style={{ backgroundImage: "linear-gradient(180deg, transparent 15%, rgba(27,42,39,.78) 100%), url('/dining-area.jpg')" }}><span><IonIcon icon={restaurantOutline} /> SHARED DINING</span><strong>Good food, good company</strong></article>
+              <article className="resident-life-card" style={{ backgroundImage: "linear-gradient(180deg, transparent 15%, rgba(27,42,39,.78) 100%), url('/gaming-lounge.jpg')" }}><span><IonIcon icon={wifiOutline} /> COMMUNITY SPACE</span><strong>Room to relax and connect</strong></article>
+            </div>
+          </section>
 
-        {/* 4 Interactive Quick Service Tiles */}
-        <h3 style={{ fontSize: '16px', fontWeight: '800', color: '#0f172a', margin: '24px 0 12px 4px' }}>
-          Quick Services
-        </h3>
-
-        <IonGrid style={{ padding: 0 }}>
-          <IonRow>
-            {/* Payment Ledger */}
-            <IonCol size="6">
-              <div
-                onClick={() => history.push('/resident/payments')}
-                style={{
-                  background: '#ffffff',
-                  borderRadius: '20px',
-                  padding: '18px',
-                  border: '1px solid #e2e8f0',
-                  boxShadow: '0 4px 14px rgba(15, 23, 42, 0.03)',
-                  cursor: 'pointer',
-                  height: '100%',
-                }}
-              >
-                <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: '#ecfdf5', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '12px' }}>
-                  <IonIcon icon={documentTextOutline} style={{ color: '#10b981', fontSize: '20px' }} />
-                </div>
-                <div style={{ fontSize: '15px', fontWeight: 800, color: '#0f172a' }}>Payment Receipts</div>
-                <div style={{ fontSize: '12px', color: '#64748b', marginTop: '2px' }}>Download official PDFs</div>
-              </div>
-            </IonCol>
-
-            {/* Raise Ticket / Complaint */}
-            <IonCol size="6">
-              <div
-                onClick={() => history.push('/resident/complaints')}
-                style={{
-                  background: '#ffffff',
-                  borderRadius: '20px',
-                  padding: '18px',
-                  border: '1px solid #e2e8f0',
-                  boxShadow: '0 4px 14px rgba(15, 23, 42, 0.03)',
-                  cursor: 'pointer',
-                  height: '100%',
-                }}
-              >
-                <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '12px' }}>
-                  <IonIcon icon={chatbubbleEllipsesOutline} style={{ color: '#ef4444', fontSize: '20px' }} />
-                </div>
-                <div style={{ fontSize: '15px', fontWeight: 800, color: '#0f172a' }}>Complaints & Support</div>
-                <div style={{ fontSize: '12px', color: '#64748b', marginTop: '2px' }}>Wi-Fi, cleaning, fixes</div>
-              </div>
-            </IonCol>
-
-            {/* Profile & Accommodation */}
-            <IonCol size="6">
-              <div
-                onClick={() => history.push('/resident/profile')}
-                style={{
-                  background: '#ffffff',
-                  borderRadius: '20px',
-                  padding: '18px',
-                  border: '1px solid #e2e8f0',
-                  boxShadow: '0 4px 14px rgba(15, 23, 42, 0.03)',
-                  cursor: 'pointer',
-                  height: '100%',
-                }}
-              >
-                <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: '#eff6ff', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '12px' }}>
-                  <IonIcon icon={homeOutline} style={{ color: '#3b82f6', fontSize: '20px' }} />
-                </div>
-                <div style={{ fontSize: '15px', fontWeight: 800, color: '#0f172a' }}>My Profile & ID Proofs</div>
-                <div style={{ fontSize: '12px', color: '#64748b', marginTop: '2px' }}>Aadhaar, PAN & Rent</div>
-              </div>
-            </IonCol>
-          </IonRow>
-        </IonGrid>
-
-        {/* Recent Payment Receipt Preview */}
-        {recentReceipt && (
-          <div style={{ marginTop: '24px' }}>
-            <h3 style={{ fontSize: '16px', fontWeight: '800', color: '#0f172a', margin: '0 0 10px 4px' }}>
-              Latest Verified Payment
-            </h3>
-            <IonCard style={{ margin: 0, borderRadius: '20px', background: '#f0fdf4', border: '1px solid #bbf7d0' }}>
-              <IonCardContent style={{ padding: '16px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <div style={{ fontSize: '11px', fontWeight: 700, color: '#166534' }}>RECEIPT NO: {recentReceipt.receiptNumber}</div>
-                    <div style={{ fontSize: '18px', fontWeight: 800, color: '#15803d', margin: '2px 0' }}>
-                      ₹{recentReceipt.amount?.toLocaleString('en-IN')} Paid
-                    </div>
-                    <div style={{ fontSize: '12px', color: '#4b5563' }}>For {recentReceipt.rentMonth} via {recentReceipt.paymentMethod}</div>
-                  </div>
-                  <IonButton
-                    size="small"
-                    color="success"
-                    onClick={() => history.push('/resident/payments')}
-                    style={{ '--border-radius': '10px' }}
-                  >
-                    View PDF
-                  </IonButton>
-                </div>
-              </IonCardContent>
-            </IonCard>
-          </div>
-        )}
+          {recentReceipt && <IonCard className="recent-receipt"><IonCardContent>
+            <div className="receipt-icon"><IonIcon icon={cardOutline} /></div>
+            <div className="receipt-copy"><span className="section-kicker">LATEST RECEIPT</span><strong>₹{recentReceipt.amount?.toLocaleString('en-IN')} paid</strong><small>{recentReceipt.rentMonth} · {recentReceipt.paymentMethod}</small></div>
+            <IonButton fill="clear" onClick={() => history.push('/resident/payments')} aria-label="View payment receipt"><IonIcon icon={arrowForwardOutline} /></IonButton>
+          </IonCardContent></IonCard>}
+        </main>
       </IonContent>
     </IonPage>
   );

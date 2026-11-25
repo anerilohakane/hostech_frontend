@@ -134,7 +134,7 @@ const ResidentPay: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="primary">
+        <IonToolbar>
           <IonButtons slot="start">
             <IonBackButton defaultHref="/resident/dashboard" />
           </IonButtons>
@@ -142,25 +142,67 @@ const ResidentPay: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      <IonContent className="ion-padding" style={{ '--background': '#f8fafc' }}>
-        {/* Payment Account Details */}
-        <IonCard style={{ margin: '0 0 16px 0', border: '1px solid #bfdbfe', background: '#eff6ff' }}>
-          <IonCardContent style={{ padding: '16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-              <IonIcon icon={qrCodeOutline} style={{ color: '#2563eb', fontSize: '20px' }} />
-              <strong style={{ color: '#1e40af', fontSize: '14px' }}>PG Official Payment UPI ID</strong>
+      <IonContent className="ion-padding" style={{ '--background': '#090c12' }}>
+        {/* Payment Account Details with Dynamic UPI QR & Mobile App Launch */}
+        <IonCard style={{ margin: '0 0 16px 0', background: '#111723', border: '1px solid rgba(163, 230, 53, 0.3)' }}>
+          <IonCardContent style={{ padding: '18px', textAlign: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '8px' }}>
+              <IonIcon icon={qrCodeOutline} style={{ color: '#a3e635', fontSize: '22px' }} />
+              <strong style={{ color: '#ffffff', fontSize: '15px' }}>Instant UPI Payment</strong>
             </div>
-            <div style={{ background: '#fff', padding: '8px 12px', borderRadius: '8px', border: '1px dashed #93c5fd', fontSize: '15px', fontWeight: '800', color: '#1d4ed8' }}>
-              {settings?.upiId || 'pgmanagement@okhdfcbank'}
+
+            {/* Dynamic Generated UPI QR Code */}
+            {amount > 0 && (
+              <div style={{ margin: '14px 0', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <div style={{ background: '#ffffff', padding: '12px', borderRadius: '16px', display: 'inline-block', boxShadow: '0 8px 24px rgba(0,0,0,0.5)' }}>
+                  <img
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(
+                      `upi://pay?pa=${settings?.upiId || 'hosttech@okhdfcbank'}&pn=HostTech%20PG&am=${amount}&cu=INR&tn=Rent_${currentRec?.rentMonth || 'Payment'}`
+                    )}`}
+                    alt="Scan UPI QR"
+                    style={{ width: '150px', height: '150px', display: 'block' }}
+                  />
+                </div>
+                <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '8px' }}>
+                  Scan with GPay, PhonePe, Paytm, or BHIM
+                </div>
+
+                {/* Direct Mobile UPI Intent Button */}
+                <a
+                  href={`upi://pay?pa=${settings?.upiId || 'hosttech@okhdfcbank'}&pn=HostTech%20PG&am=${amount}&cu=INR&tn=Rent_${currentRec?.rentMonth || 'Payment'}`}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    marginTop: '12px',
+                    padding: '10px 20px',
+                    background: '#a3e635',
+                    color: '#070a0f',
+                    borderRadius: '12px',
+                    fontWeight: 800,
+                    fontSize: '13px',
+                    textDecoration: 'none',
+                    boxShadow: '0 4px 14px rgba(163, 230, 53, 0.4)',
+                  }}
+                >
+                  <IonIcon icon={cardOutline} />
+                  Open in UPI App (Pay ₹{amount.toLocaleString('en-IN')})
+                </a>
+              </div>
+            )}
+
+            <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '10px 14px', borderRadius: '10px', border: '1px dashed rgba(163, 230, 53, 0.4)', fontSize: '14px', fontWeight: '800', color: '#a3e635', marginTop: '10px' }}>
+              UPI ID: {settings?.upiId || 'hosttech@okhdfcbank'}
             </div>
-            <div style={{ marginTop: '8px', fontSize: '12px', color: '#475569' }}>
+            <div style={{ marginTop: '10px', fontSize: '12px', color: '#94a3b8' }}>
               Bank: <strong>{settings?.bankDetails?.bankName || 'HDFC Bank'}</strong> • A/C: <strong>{settings?.bankDetails?.accountNumber || '50200012345678'}</strong> (IFSC: {settings?.bankDetails?.ifscCode || 'HDFC0001234'})
             </div>
           </IonCardContent>
         </IonCard>
 
         {/* Submission Form */}
-        <IonCard style={{ margin: 0, border: '1px solid #e2e8f0' }}>
+        <IonCard style={{ margin: 0, border: '1px solid rgba(255, 255, 255, 0.08)' }}>
           <IonCardContent style={{ padding: '20px' }}>
             <form onSubmit={handleSubmit}>
               <IonItem lines="inset" style={{ '--padding-start': '0', marginBottom: '16px' }}>
@@ -225,7 +267,7 @@ const ResidentPay: React.FC = () => {
 
               {/* Screenshot Upload */}
               <div style={{ marginTop: '16px', marginBottom: '16px' }}>
-                <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#475569', marginBottom: '6px' }}>
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#94a3b8', marginBottom: '6px' }}>
                   Payment Screenshot Proof *
                 </label>
                 <input
@@ -248,7 +290,7 @@ const ResidentPay: React.FC = () => {
                     <img
                       src={previewUrl}
                       alt="Payment Proof Preview"
-                      style={{ maxHeight: '180px', borderRadius: '10px', border: '1px solid #e2e8f0' }}
+                      style={{ maxHeight: '180px', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.08)' }}
                     />
                   </div>
                 )}
@@ -285,4 +327,5 @@ const ResidentPay: React.FC = () => {
 };
 
 export default ResidentPay;
+
 

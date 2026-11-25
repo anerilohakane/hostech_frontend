@@ -115,7 +115,7 @@ const ResidentProfilePage: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="primary">
+        <IonToolbar>
           <IonTitle>My Profile</IonTitle>
           <IonButtons slot="end">
             <IonButton onClick={() => setEditModalOpen(true)}>
@@ -126,9 +126,9 @@ const ResidentProfilePage: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      <IonContent className="ion-padding" style={{ '--background': '#f8fafc' }}>
+      <IonContent className="ion-padding" style={{ '--background': '#090c12' }}>
         {/* Profile Header Card */}
-        <IonCard style={{ margin: '0 0 16px 0', border: '1px solid #e2e8f0', textAlign: 'center' }}>
+        <IonCard style={{ margin: '0 0 16px 0', border: '1px solid rgba(255, 255, 255, 0.08)', textAlign: 'center' }}>
           <IonCardContent style={{ padding: '24px 16px' }}>
             <div
               style={{
@@ -146,7 +146,7 @@ const ResidentProfilePage: React.FC = () => {
             >
               <IonIcon icon={personCircleOutline} />
             </div>
-            <h2 style={{ fontSize: '20px', fontWeight: '800', color: '#0f172a', margin: '0 0 4px 0' }}>
+            <h2 style={{ fontSize: '20px', fontWeight: '800', color: '#ffffff', margin: '0 0 4px 0' }}>
               {profile?.fullName || user?.name || 'Resident'}
             </h2>
             <p style={{ margin: '0 0 10px 0', fontSize: '13px', color: '#64748b' }}>
@@ -166,9 +166,9 @@ const ResidentProfilePage: React.FC = () => {
         </IonCard>
 
         {/* Room & PG Details */}
-        <IonCard style={{ margin: '0 0 16px 0', border: '1px solid #e2e8f0' }}>
+        <IonCard style={{ margin: '0 0 16px 0', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
           <IonCardContent style={{ padding: '16px' }}>
-            <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#0f172a', margin: '0 0 12px 0' }}>
+            <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#ffffff', margin: '0 0 12px 0' }}>
               Accommodation Details
             </h3>
             <IonList lines="full">
@@ -220,9 +220,9 @@ const ResidentProfilePage: React.FC = () => {
         </IonCard>
 
         {/* Contact & Personal Info */}
-        <IonCard style={{ margin: '0 0 16px 0', border: '1px solid #e2e8f0' }}>
+        <IonCard style={{ margin: '0 0 16px 0', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
           <IonCardContent style={{ padding: '16px' }}>
-            <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#0f172a', margin: '0 0 12px 0' }}>
+            <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#ffffff', margin: '0 0 12px 0' }}>
               Contact & Emergency Information
             </h3>
             <IonList lines="full">
@@ -263,10 +263,10 @@ const ResidentProfilePage: React.FC = () => {
         </IonCard>
 
         {/* Uploaded Documents & ID Proofs */}
-        <IonCard style={{ margin: '0 0 16px 0', border: '1px solid #e2e8f0' }}>
+        <IonCard style={{ margin: '0 0 16px 0', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
           <IonCardContent style={{ padding: '16px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-              <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#0f172a', margin: 0 }}>
+              <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#ffffff', margin: 0 }}>
                 My Identity Proofs & Documents
               </h3>
               <span style={{ fontSize: '12px', background: '#ecfdf5', color: '#059669', padding: '2px 8px', borderRadius: '12px', fontWeight: 700 }}>
@@ -324,7 +324,7 @@ const ResidentProfilePage: React.FC = () => {
         {/* Edit Resident Profile Modal */}
         <IonModal isOpen={editModalOpen} onDidDismiss={() => setEditModalOpen(false)}>
           <IonHeader>
-            <IonToolbar color="primary">
+            <IonToolbar>
               <IonTitle>Edit Profile Info</IonTitle>
               <IonButtons slot="end">
                 <IonButton onClick={() => setEditModalOpen(false)} style={{ color: '#ffffff', fontWeight: 800 }}>
@@ -451,3 +451,4 @@ const ResidentProfilePage: React.FC = () => {
 };
 
 export default ResidentProfilePage;
+

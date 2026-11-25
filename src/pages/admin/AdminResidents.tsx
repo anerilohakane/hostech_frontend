@@ -281,7 +281,7 @@ const AdminResidents: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="primary">
+        <IonToolbar>
           <IonTitle>Resident Management</IonTitle>
           <IonButtons slot="end">
             <IonButton onClick={openRegisterModal}>
@@ -291,7 +291,7 @@ const AdminResidents: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      <IonContent className="ion-padding" style={{ '--background': '#f8fafc' }}>
+      <IonContent className="ion-padding" style={{ '--background': '#090c12' }}>
         <IonSearchbar
           value={search}
           placeholder="Search by name, phone or email..."
@@ -341,21 +341,21 @@ const AdminResidents: React.FC = () => {
                 '--padding-bottom': '12px',
                 '--padding-start': '14px',
                 '--padding-end': '14px',
-                background: '#ffffff',
+                background: '#111723',
                 marginBottom: '8px',
                 borderRadius: '16px',
-                border: '1px solid #e2e8f0',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
                 boxShadow: '0 2px 8px rgba(0,0,0,0.02)',
               }}
             >
               <IonLabel>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <h3 style={{ fontWeight: '800', fontSize: '16px', color: '#0f172a' }}>{r.fullName}</h3>
+                  <h3 style={{ fontWeight: '800', fontSize: '16px', color: '#ffffff' }}>{r.fullName}</h3>
                   <IonBadge color={r.status === 'Active' ? 'success' : r.status === 'Notice Period' ? 'warning' : 'medium'}>
                     {r.status}
                   </IonBadge>
                 </div>
-                <p style={{ color: '#475569', fontSize: '13px', marginTop: '2px' }}>
+                <p style={{ color: '#94a3b8', fontSize: '13px', marginTop: '2px' }}>
                   {r.propertyId?.name || 'PG'} • Room: <strong>{r.roomId?.roomNumber || 'N/A'}</strong> ({r.occupancyType || 'Single'})
                 </p>
                 <p style={{ color: '#64748b', fontSize: '12px' }}>
@@ -396,7 +396,7 @@ const AdminResidents: React.FC = () => {
         {/* Resident Registration Modal */}
         <IonModal isOpen={modalOpen} onDidDismiss={() => setModalOpen(false)}>
           <IonHeader>
-            <IonToolbar color="primary">
+            <IonToolbar>
               <IonTitle>Register Resident</IonTitle>
               <IonButtons slot="end">
                 <IonButton onClick={() => setModalOpen(false)} style={{ color: '#ffffff', fontWeight: 800 }}>
@@ -584,7 +584,7 @@ const AdminResidents: React.FC = () => {
                 </IonItem>
 
                 {/* Aadhaar Front */}
-                <div style={{ marginTop: '12px', padding: '10px', background: '#ffffff', borderRadius: '8px', border: '1px dashed #d8b4fe' }}>
+                <div style={{ marginTop: '12px', padding: '10px', background: '#111723', borderRadius: '8px', border: '1px dashed #d8b4fe' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
                     <span style={{ fontSize: '12px', fontWeight: '700', color: '#581c87' }}>Aadhaar Card (Front) *</span>
                     {formData.aadhaarFrontFile && (
@@ -620,7 +620,7 @@ const AdminResidents: React.FC = () => {
                 </div>
 
                 {/* Aadhaar Back */}
-                <div style={{ marginTop: '10px', padding: '10px', background: '#ffffff', borderRadius: '8px', border: '1px dashed #d8b4fe' }}>
+                <div style={{ marginTop: '10px', padding: '10px', background: '#111723', borderRadius: '8px', border: '1px dashed #d8b4fe' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
                     <span style={{ fontSize: '12px', fontWeight: '700', color: '#581c87' }}>Aadhaar Card (Back) *</span>
                     {formData.aadhaarBackFile && (
@@ -669,7 +669,7 @@ const AdminResidents: React.FC = () => {
                 </IonItem>
 
                 {/* PAN Card File */}
-                <div style={{ marginTop: '10px', padding: '10px', background: '#ffffff', borderRadius: '8px', border: '1px dashed #d8b4fe' }}>
+                <div style={{ marginTop: '10px', padding: '10px', background: '#111723', borderRadius: '8px', border: '1px dashed #d8b4fe' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
                     <span style={{ fontSize: '12px', fontWeight: '700', color: '#581c87' }}>PAN Card Document *</span>
                     {formData.panCardFile && (
@@ -708,7 +708,7 @@ const AdminResidents: React.FC = () => {
               {/* Room Selection */}
               {rooms.length > 0 ? (
                 <IonItem lines="inset" style={{ '--padding-start': '0', marginTop: '10px' }}>
-                  <IonLabel position="stacked" style={{ fontWeight: '700', fontSize: '14px', color: '#0f172a' }}>
+                  <IonLabel position="stacked" style={{ fontWeight: '700', fontSize: '14px', color: '#ffffff' }}>
                     Select Room *
                   </IonLabel>
                   <IonSelect
@@ -765,10 +765,10 @@ const AdminResidents: React.FC = () => {
                 const remaining = Math.max(0, max - assigned);
 
                 return (
-                  <div style={{ margin: '12px 0', padding: '12px 14px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0', fontSize: '13px' }}>
+                  <div style={{ margin: '12px 0', padding: '12px 14px', background: '#090c12', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.08)', fontSize: '13px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
                       <span style={{ color: '#64748b' }}>Room Plan Type:</span>
-                      <strong style={{ color: '#0f172a' }}>
+                      <strong style={{ color: '#ffffff' }}>
                         {isSingle ? 'Single Room (Entire)' : `Sharing Room (${max} Sharing)`}
                       </strong>
                     </div>
@@ -923,7 +923,7 @@ const AdminResidents: React.FC = () => {
             {createdCredentials && (
               <div style={{ textAlign: 'center', padding: '16px 8px', paddingBottom: 'calc(env(safe-area-inset-bottom, 24px) + 50px)' }}>
                 <div style={{ fontSize: '48px', marginBottom: '8px' }}>🎉</div>
-                <h2 style={{ fontWeight: '800', color: '#0f172a', margin: '0 0 8px 0' }}>
+                <h2 style={{ fontWeight: '800', color: '#ffffff', margin: '0 0 8px 0' }}>
                   Resident Account Created!
                 </h2>
                 <p style={{ color: '#64748b', fontSize: '14px', margin: '0 0 20px 0' }}>
@@ -932,8 +932,8 @@ const AdminResidents: React.FC = () => {
 
                 <div
                   style={{
-                    background: '#f8fafc',
-                    border: '1px solid #e2e8f0',
+                    background: '#090c12',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
                     borderRadius: '14px',
                     padding: '20px',
                     textAlign: 'left',
@@ -947,7 +947,7 @@ const AdminResidents: React.FC = () => {
 
                   <div style={{ marginBottom: '12px' }}>
                     <div style={{ fontSize: '11px', color: '#94a3b8' }}>NAME</div>
-                    <div style={{ fontSize: '15px', fontWeight: '700', color: '#0f172a' }}>{createdCredentials.name}</div>
+                    <div style={{ fontSize: '15px', fontWeight: '700', color: '#ffffff' }}>{createdCredentials.name}</div>
                   </div>
 
                   <div style={{ marginBottom: '12px' }}>
@@ -978,7 +978,7 @@ const AdminResidents: React.FC = () => {
 
                   <div>
                     <div style={{ fontSize: '11px', color: '#94a3b8' }}>ALLOCATED ROOM</div>
-                    <div style={{ fontSize: '15px', fontWeight: '700', color: '#0f172a' }}>Room {createdCredentials.room}</div>
+                    <div style={{ fontSize: '15px', fontWeight: '700', color: '#ffffff' }}>Room {createdCredentials.room}</div>
                   </div>
                 </div>
 
@@ -1024,3 +1024,4 @@ const AdminResidents: React.FC = () => {
 };
 
 export default AdminResidents;
+

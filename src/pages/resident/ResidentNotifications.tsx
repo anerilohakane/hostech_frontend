@@ -50,7 +50,7 @@ const ResidentNotifications: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="primary">
+        <IonToolbar>
           <IonButtons slot="start">
             <IonBackButton defaultHref="/resident/dashboard" />
           </IonButtons>
@@ -64,7 +64,7 @@ const ResidentNotifications: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      <IonContent className="ion-padding" style={{ '--background': '#f8fafc' }}>
+      <IonContent className="ion-padding" style={{ '--background': '#090c12' }}>
         <IonList lines="full" style={{ borderRadius: '16px', overflow: 'hidden' }}>
           {notifications.map((n) => (
             <IonItem
@@ -82,14 +82,14 @@ const ResidentNotifications: React.FC = () => {
               />
               <IonLabel>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <h3 style={{ fontWeight: n.isRead ? '600' : '800', color: '#0f172a', fontSize: '15px' }}>
+                  <h3 style={{ fontWeight: n.isRead ? '600' : '800', color: '#ffffff', fontSize: '15px' }}>
                     {n.title}
                   </h3>
                   <small style={{ color: '#94a3b8', fontSize: '11px' }}>
                     {new Date(n.createdAt).toLocaleDateString()}
                   </small>
                 </div>
-                <p style={{ color: '#475569', fontSize: '13px', marginTop: '4px' }}>{n.message}</p>
+                <p style={{ color: '#94a3b8', fontSize: '13px', marginTop: '4px' }}>{n.message}</p>
               </IonLabel>
             </IonItem>
           ))}
@@ -116,4 +116,5 @@ const ResidentNotifications: React.FC = () => {
 };
 
 export default ResidentNotifications;
+
 

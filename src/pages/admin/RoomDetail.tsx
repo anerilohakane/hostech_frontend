@@ -60,7 +60,7 @@ const RoomDetail: React.FC = () => {
     return (
       <IonPage>
         <IonHeader>
-          <IonToolbar color="primary">
+          <IonToolbar>
             <IonButtons slot="start">
               <IonBackButton defaultHref="/admin/rooms" />
             </IonButtons>
@@ -90,7 +90,7 @@ const RoomDetail: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      <IonContent fullscreen className="ion-padding" style={{ '--background': '#f8fafc' }}>
+      <IonContent fullscreen className="ion-padding" style={{ '--background': '#090c12' }}>
         {/* Room Header Hero Card */}
         <div
           style={{
@@ -153,7 +153,7 @@ const RoomDetail: React.FC = () => {
         {/* Current Occupants Section */}
         <div style={{ marginBottom: '20px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-            <h3 style={{ fontSize: '17px', fontWeight: 800, margin: 0, color: '#0f172a' }}>
+            <h3 style={{ fontSize: '17px', fontWeight: 800, margin: 0, color: '#ffffff' }}>
               Current Occupants ({room.occupants?.length || 0})
             </h3>
             {room.availableSlots > 0 && (
@@ -175,13 +175,13 @@ const RoomDetail: React.FC = () => {
                   key={occ._id}
                   button
                   onClick={() => history.push(`/admin/residents/${occ._id}`)}
-                  style={{ margin: 0, borderRadius: '18px', border: '1px solid #e2e8f0' }}
+                  style={{ margin: 0, borderRadius: '18px', border: '1px solid rgba(255, 255, 255, 0.08)' }}
                 >
                   <IonCardContent style={{ padding: '16px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <strong style={{ fontSize: '16px', color: '#0f172a' }}>{occ.fullName}</strong>
+                          <strong style={{ fontSize: '16px', color: '#ffffff' }}>{occ.fullName}</strong>
                           <IonBadge color="success">{occ.occupancyType}</IonBadge>
                         </div>
                         <div style={{ fontSize: '13px', color: '#64748b', marginTop: '4px' }}>
@@ -202,10 +202,10 @@ const RoomDetail: React.FC = () => {
               ))}
             </div>
           ) : (
-            <IonCard style={{ margin: 0, borderRadius: '18px', border: '1px dashed #cbd5e1', background: '#ffffff' }}>
+            <IonCard style={{ margin: 0, borderRadius: '18px', border: '1px dashed #cbd5e1', background: '#111723' }}>
               <IonCardContent style={{ textAlign: 'center', padding: '30px' }}>
                 <IonIcon icon={bedOutline} style={{ fontSize: '42px', color: '#94a3b8' }} />
-                <h4 style={{ fontWeight: 700, margin: '8px 0 4px 0', color: '#0f172a' }}>No Tenants Allocated</h4>
+                <h4 style={{ fontWeight: 700, margin: '8px 0 4px 0', color: '#ffffff' }}>No Tenants Allocated</h4>
                 <p style={{ fontSize: '13px', color: '#64748b', margin: '0 0 16px 0' }}>
                   This room currently has {room.availableSlots} available slot(s).
                 </p>
@@ -220,25 +220,25 @@ const RoomDetail: React.FC = () => {
         {/* Room Specifications Card */}
         <IonCard style={{ margin: 0, borderRadius: '20px' }}>
           <IonCardContent style={{ padding: '20px' }}>
-            <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#0f172a', marginBottom: '14px' }}>
+            <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#ffffff', marginBottom: '14px' }}>
               Room Specifications & Amenities
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px' }}>
                 <span style={{ color: '#64748b' }}>Property Name</span>
-                <strong style={{ color: '#0f172a' }}>{room.propertyId?.name}</strong>
+                <strong style={{ color: '#ffffff' }}>{room.propertyId?.name}</strong>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px' }}>
                 <span style={{ color: '#64748b' }}>Floor Number</span>
-                <strong style={{ color: '#0f172a' }}>Floor {room.floor}</strong>
+                <strong style={{ color: '#ffffff' }}>Floor {room.floor}</strong>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px' }}>
                 <span style={{ color: '#64748b' }}>Air Conditioning</span>
-                <strong style={{ color: '#0f172a' }}>{room.roomType}</strong>
+                <strong style={{ color: '#ffffff' }}>{room.roomType}</strong>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px' }}>
                 <span style={{ color: '#64748b' }}>Maximum Capacity</span>
-                <strong style={{ color: '#0f172a' }}>{room.rentalType === 'Full Room (Single Tenant)' ? 1 : room.maxCapacity} Tenant(s)</strong>
+                <strong style={{ color: '#ffffff' }}>{room.rentalType === 'Full Room (Single Tenant)' ? 1 : room.maxCapacity} Tenant(s)</strong>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px' }}>
                 <span style={{ color: '#64748b' }}>Agreed Standard Rent</span>
@@ -253,4 +253,5 @@ const RoomDetail: React.FC = () => {
 };
 
 export default RoomDetail;
+
 

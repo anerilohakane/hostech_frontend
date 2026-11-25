@@ -95,10 +95,6 @@ const AdminTabs: React.FC = () => (
         <IonIcon icon={barChartOutline} />
         <IonLabel>Reports</IonLabel>
       </IonTabButton>
-      <IonTabButton tab="profile" href="/admin/profile">
-        <IonIcon icon={personCircleOutline} />
-        <IonLabel>Profile</IonLabel>
-      </IonTabButton>
     </IonTabBar>
   </IonTabs>
 );

@@ -1,49 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import {
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-  IonCard,
-  IonCardContent,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonRefresher,
-  IonRefresherContent,
-  IonButton,
-  IonIcon,
-  IonBadge,
-  IonList,
-  IonItem,
-  IonLabel,
-  IonSelect,
-  IonSelectOption,
-  IonButtons,
+  IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonRefresher,
+  IonRefresherContent, IonButton, IonIcon, IonCard, IonCardContent,
+  IonSelect, IonSelectOption, IonButtons,
 } from '@ionic/react';
 import {
-  businessOutline,
-  bedOutline,
-  peopleOutline,
-  cashOutline,
-  alertCircleOutline,
-  documentTextOutline,
-  logOutOutline,
-  checkmarkCircleOutline,
-  arrowForwardOutline,
-  shieldCheckmarkOutline,
-  walletOutline,
-  trendingUpOutline,
+  bedOutline, peopleOutline, cashOutline, alertCircleOutline,
+  logOutOutline, checkmarkCircleOutline, arrowForwardOutline, walletOutline,
 } from 'ionicons/icons';
 import { reportService, propertyService } from '../../services';
 import { useAuth } from '../../context/AuthContext';
 import { useHistory } from 'react-router-dom';
+import './AdminDashboard.css';
 
 const AdminDashboard: React.FC = () => {
   const [stats, setStats] = useState<any>(null);
   const [properties, setProperties] = useState<any[]>([]);
-  const [selectedProperty, setSelectedProperty] = useState<string>('');
+  const [selectedProperty, setSelectedProperty] = useState('');
   const [loading, setLoading] = useState(true);
   const { user, logout } = useAuth();
   const history = useHistory();
@@ -63,298 +36,102 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    loadData();
-  }, [selectedProperty]);
-
-  const doRefresh = async (event: CustomEvent) => {
-    await loadData();
-    event.detail.complete();
-  };
-
+  useEffect(() => { loadData(); }, [selectedProperty]);
+  const doRefresh = async (event: CustomEvent) => { await loadData(); event.detail.complete(); };
   const cards = stats?.summaryCards || {};
+  const occupancy = cards.totalBeds ? Math.round(((cards.occupiedBeds || 0) / cards.totalBeds) * 100) : 0;
+  const money = (amount: number | undefined) => `₹${(amount ?? 0).toLocaleString('en-IN')}`;
 
   return (
-    <IonPage>
+    <IonPage className="admin-dashboard">
       <IonHeader>
-        <IonToolbar>
-          <IonTitle>Operations Center</IonTitle>
+        <IonToolbar className="dashboard-toolbar">
+          <div className="dashboard-brand">
+            <div className="brand-wordmark"><strong>Host<span>Tech</span></strong></div>
+          </div>
           <IonButtons slot="end">
-            <IonButton
-              fill="clear"
-              onClick={() => {
-                logout();
-                history.replace('/login');
-              }}
-            >
-              <IonIcon icon={logOutOutline} slot="icon-only" style={{ color: '#fff' }} />
+            <IonButton fill="clear" onClick={() => history.push('/admin/profile')} aria-label="My profile">
+              <IonIcon icon={peopleOutline} slot="icon-only" />
+            </IonButton>
+            <IonButton fill="clear" onClick={() => { logout(); history.replace('/login'); }} aria-label="Log out">
+              <IonIcon icon={logOutOutline} slot="icon-only" />
             </IonButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
 
-      <IonContent fullscreen className="ion-padding" style={{ '--background': '#f8fafc' }}>
-        <IonRefresher slot="fixed" onIonRefresh={doRefresh}>
-          <IonRefresherContent />
-        </IonRefresher>
-
-        {/* Hero Banner Header */}
-        <div
-          style={{
-            background: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #4338ca 100%)',
-            borderRadius: '24px',
-            padding: '24px',
-            color: '#fff',
-            marginBottom: '20px',
-            boxShadow: '0 12px 30px -4px rgba(49, 46, 129, 0.35)',
-            position: 'relative',
-            overflow: 'hidden',
-          }}
-        >
-          <div style={{ position: 'relative', zIndex: 2 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '10px' }}>
+      <IonContent className="dashboard-content">
+        <IonRefresher slot="fixed" onIonRefresh={doRefresh}><IonRefresherContent /></IonRefresher>
+        <main className="dashboard-main">
+          <section className="dashboard-hero">
+            <div className="hero-topline">
               <div>
-                <span style={{ fontSize: '12px', fontWeight: 700, color: '#a5b4fc', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                  Property Portfolio Overview
-                </span>
-                <h1 style={{ fontSize: '24px', fontWeight: '800', margin: '4px 0 0 0', letterSpacing: '-0.02em' }}>
-                  Welcome back, {user?.name || 'Administrator'}
-                </h1>
-                <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#c7d2fe' }}>
-                  {stats?.currentMonth || 'Current Month'} Performance Metrics
-                </p>
+                <span className="eyebrow">YOUR PORTFOLIO</span>
+                <h1>Good {new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 17 ? 'afternoon' : 'evening'}, {user?.name?.split(' ')[0] || 'there'}</h1>
+                <p>{stats?.currentMonth || 'This month'} at a glance</p>
               </div>
-
-              {/* Property Selector */}
-              <div style={{ background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(10px)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.2)' }}>
-                <IonSelect
-                  interface="popover"
-                  value={selectedProperty}
-                  placeholder="All Properties"
-                  onIonChange={(e) => setSelectedProperty(e.detail.value)}
-                  style={{ color: '#fff', fontSize: '13px', fontWeight: 600, padding: '4px 12px' }}
-                >
-                  <IonSelectOption value="">All Properties</IonSelectOption>
-                  {properties.map((p) => (
-                    <IonSelectOption key={p._id} value={p._id}>
-                      {p.name}
-                    </IonSelectOption>
-                  ))}
+              <div className="property-picker">
+                <IonSelect interface="popover" value={selectedProperty} placeholder="All properties" onIonChange={(e) => setSelectedProperty(e.detail.value)} aria-label="Select property">
+                  <IonSelectOption value="">All properties</IonSelectOption>
+                  {properties.map((property) => <IonSelectOption key={property._id} value={property._id}>{property.name}</IonSelectOption>)}
                 </IonSelect>
               </div>
             </div>
-
-            {/* Top Quick Stats Strip */}
-            <div style={{ display: 'flex', gap: '16px', marginTop: '20px', borderTop: '1px solid rgba(255,255,255,0.15)', paddingTop: '16px' }}>
-              <div>
-                <div style={{ fontSize: '11px', color: '#a5b4fc', fontWeight: 600 }}>TOTAL CAPACITY</div>
-                <div style={{ fontSize: '18px', fontWeight: 800 }}>{cards.totalBeds ?? 0} Beds</div>
-              </div>
-              <div style={{ width: '1px', background: 'rgba(255,255,255,0.15)' }} />
-              <div>
-                <div style={{ fontSize: '11px', color: '#a5b4fc', fontWeight: 600 }}>ACTIVE RESIDENTS</div>
-                <div style={{ fontSize: '18px', fontWeight: 800, color: '#86efac' }}>{cards.activeResidents ?? 0} Tenants</div>
-              </div>
-              <div style={{ width: '1px', background: 'rgba(255,255,255,0.15)' }} />
-              <div>
-                <div style={{ fontSize: '11px', color: '#a5b4fc', fontWeight: 600 }}>OCCUPANCY RATE</div>
-                <div style={{ fontSize: '18px', fontWeight: 800 }}>
-                  {cards.totalBeds ? Math.round(((cards.occupiedBeds || 0) / cards.totalBeds) * 100) : 0}%
-                </div>
-              </div>
+            <div className="hero-stats">
+              <div><span>Total beds</span><strong>{cards.totalBeds ?? 0}</strong></div>
+              <div><span>Residents</span><strong>{cards.activeResidents ?? 0}</strong></div>
+              <div><span>Occupancy</span><strong>{occupancy}%</strong></div>
             </div>
-          </div>
-        </div>
+            <div className="occupancy-track"><span style={{ width: `${occupancy}%` }} /></div>
+          </section>
 
-        {/* 4 Primary Metric Cards */}
-        <IonGrid style={{ padding: 0 }}>
-          <IonRow>
-            {/* Rent Collected */}
-            <IonCol size="6" sizeMd="3">
-              <div
-                style={{
-                  background: '#ffffff',
-                  borderRadius: '20px',
-                  padding: '18px',
-                  border: '1px solid #e2e8f0',
-                  boxShadow: '0 4px 16px rgba(15, 23, 42, 0.04)',
-                }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '12px', fontWeight: 700, color: '#64748b' }}>RENT COLLECTED</span>
-                  <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#ecfdf5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <IonIcon icon={cashOutline} style={{ color: '#10b981', fontSize: '18px' }} />
-                  </div>
-                </div>
-                <div style={{ fontSize: '22px', fontWeight: 800, color: '#0f172a', margin: '10px 0 2px 0' }}>
-                  ₹{(cards.rentCollected ?? 0).toLocaleString('en-IN')}
-                </div>
-                <div style={{ fontSize: '11px', color: '#10b981', fontWeight: 600 }}>
-                  Target: ₹{(cards.totalRentForMonth ?? 0).toLocaleString('en-IN')}
-                </div>
-              </div>
-            </IonCol>
+          <div className="section-heading"><div><span className="eyebrow">AT A GLANCE</span><h2>Monthly overview</h2></div><span className="period-label">{stats?.currentMonth || 'This month'}</span></div>
+          <section className="metric-grid" aria-label="Monthly overview">
+            <IonCard className="metric-card"><IonCardContent>
+              <div className="metric-top"><span>Rent collected</span><span className="metric-icon mint"><IonIcon icon={cashOutline} /></span></div>
+              <strong>{money(cards.rentCollected)}</strong><small>of {money(cards.totalRentForMonth)} expected</small>
+            </IonCardContent></IonCard>
+            <IonCard className="metric-card"><IonCardContent>
+              <div className="metric-top"><span>Overdue rent</span><span className="metric-icon coral"><IonIcon icon={alertCircleOutline} /></span></div>
+              <strong className="coral-text">{money(cards.overdueRent)}</strong><small>Needs follow-up</small>
+            </IonCardContent></IonCard>
+            <IonCard className="metric-card"><IonCardContent>
+              <div className="metric-top"><span>Available beds</span><span className="metric-icon blue"><IonIcon icon={bedOutline} /></span></div>
+              <strong>{cards.vacantBeds ?? 0}<em> / {cards.totalBeds ?? 0}</em></strong><small>Ready to fill</small>
+            </IonCardContent></IonCard>
+            <IonCard className="metric-card"><IonCardContent>
+              <div className="metric-top"><span>Pending payments</span><span className="metric-icon amber"><IonIcon icon={checkmarkCircleOutline} /></span></div>
+              <strong>{cards.pendingPaymentVerification ?? 0}</strong><small>Awaiting review</small>
+            </IonCardContent></IonCard>
+          </section>
 
-            {/* Overdue Rent */}
-            <IonCol size="6" sizeMd="3">
-              <div
-                style={{
-                  background: '#ffffff',
-                  borderRadius: '20px',
-                  padding: '18px',
-                  border: '1px solid #e2e8f0',
-                  boxShadow: '0 4px 16px rgba(15, 23, 42, 0.04)',
-                }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '12px', fontWeight: 700, color: '#64748b' }}>OVERDUE RENT</span>
-                  <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <IonIcon icon={alertCircleOutline} style={{ color: '#ef4444', fontSize: '18px' }} />
-                  </div>
-                </div>
-                <div style={{ fontSize: '22px', fontWeight: 800, color: '#ef4444', margin: '10px 0 2px 0' }}>
-                  ₹{(cards.overdueRent ?? 0).toLocaleString('en-IN')}
-                </div>
-                <div style={{ fontSize: '11px', color: '#dc2626', fontWeight: 600 }}>
-                  Follow-up required
-                </div>
-              </div>
-            </IonCol>
+          <section className="quick-actions">
+            <IonButton expand="block" onClick={() => history.push('/admin/residents')}>+ Add a resident</IonButton>
+            <IonButton expand="block" fill="outline" onClick={() => history.push('/admin/payments')}>Review payments <span className="action-count">{cards.pendingPaymentVerification ?? 0}</span></IonButton>
+          </section>
 
-            {/* Available Vacancies */}
-            <IonCol size="6" sizeMd="3">
-              <div
-                style={{
-                  background: '#ffffff',
-                  borderRadius: '20px',
-                  padding: '18px',
-                  border: '1px solid #e2e8f0',
-                  boxShadow: '0 4px 16px rgba(15, 23, 42, 0.04)',
-                }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '12px', fontWeight: 700, color: '#64748b' }}>AVAILABLE SLOTS</span>
-                  <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#eff6ff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <IonIcon icon={bedOutline} style={{ color: '#3b82f6', fontSize: '18px' }} />
-                  </div>
-                </div>
-                <div style={{ fontSize: '22px', fontWeight: 800, color: '#0f172a', margin: '10px 0 2px 0' }}>
-                  {cards.vacantBeds ?? 0}
-                  <span style={{ fontSize: '13px', color: '#94a3b8', fontWeight: 500 }}> / {cards.totalBeds ?? 0}</span>
-                </div>
-                <div style={{ fontSize: '11px', color: '#2563eb', fontWeight: 600 }}>
-                  Ready to rent
-                </div>
-              </div>
-            </IonCol>
+          <section className="dashboard-section">
+            <div className="section-heading"><div><span className="eyebrow">YOUR SPACE</span><h2>Spaces & amenities</h2></div><span className="swipe-hint">Swipe to explore</span></div>
+            <div className="space-carousel">
+              <article className="space-card" style={{ backgroundImage: "linear-gradient(180deg, transparent 20%, rgba(14,42,32,.78) 100%), url('/gaming-lounge.jpg')" }}><span>COMMUNITY</span><div><h3>Recreation lounge</h3><p>A place to unwind together</p></div></article>
+              <article className="space-card" style={{ backgroundImage: "linear-gradient(180deg, transparent 20%, rgba(14,42,32,.78) 100%), url('/dining-area.jpg')" }}><span>DINING</span><div><h3>Dining area</h3><p>Shared meals, every day</p></div></article>
+              <article className="space-card" style={{ backgroundImage: "linear-gradient(180deg, transparent 20%, rgba(14,42,32,.78) 100%), url('/bunk-lounge.jpg')" }}><span>RESIDENCE</span><div><h3>Resident spaces</h3><p>Comfortable places to recharge</p></div></article>
+            </div>
+          </section>
 
-            {/* Pending Verifications */}
-            <IonCol size="6" sizeMd="3">
-              <div
-                style={{
-                  background: '#ffffff',
-                  borderRadius: '20px',
-                  padding: '18px',
-                  border: '1px solid #e2e8f0',
-                  boxShadow: '0 4px 16px rgba(15, 23, 42, 0.04)',
-                }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '12px', fontWeight: 700, color: '#64748b' }}>PENDING PROOFS</span>
-                  <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#fffbeb', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <IonIcon icon={checkmarkCircleOutline} style={{ color: '#f59e0b', fontSize: '18px' }} />
-                  </div>
+          <section className="dashboard-section payment-section">
+            <div className="section-heading"><div><span className="eyebrow">LATEST ACTIVITY</span><h2>Payment proofs</h2></div><IonButton fill="clear" size="small" onClick={() => history.push('/admin/payments')}>See all <IonIcon icon={arrowForwardOutline} slot="end" /></IonButton></div>
+            <IonCard className="payments-card"><IonCardContent>
+              {stats?.recentPayments?.length ? stats.recentPayments.map((payment: any) => (
+                <div className="payment-row" key={payment._id}>
+                  <span className="payment-avatar"><IonIcon icon={walletOutline} /></span>
+                  <div className="payment-person"><strong>{payment.residentId?.fullName || 'Resident'}</strong><span>{payment.paymentMethod} · {new Date(payment.paymentDate).toLocaleDateString()}</span></div>
+                  <div className="payment-amount"><strong>{money(payment.amount)}</strong><span className={`payment-status ${payment.status === 'Approved' ? 'is-approved' : payment.status === 'Pending' ? 'is-pending' : 'is-rejected'}`}>{payment.status}</span></div>
                 </div>
-                <div style={{ fontSize: '22px', fontWeight: 800, color: '#f59e0b', margin: '10px 0 2px 0' }}>
-                  {cards.pendingPaymentVerification ?? 0}
-                </div>
-                <div style={{ fontSize: '11px', color: '#d97706', fontWeight: 600 }}>
-                  Awaiting review
-                </div>
-              </div>
-            </IonCol>
-          </IonRow>
-        </IonGrid>
-
-        {/* Action Shortcuts */}
-        <div style={{ marginTop: '20px', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-          <IonButton
-            color="primary"
-            onClick={() => history.push('/admin/residents')}
-            style={{ flex: 1, minWidth: '150px', height: '46px', '--border-radius': '14px' }}
-          >
-            + Onboard Resident
-          </IonButton>
-          <IonButton
-            fill="outline"
-            color="primary"
-            onClick={() => history.push('/admin/payments')}
-            style={{ flex: 1, minWidth: '150px', height: '46px', '--border-radius': '14px' }}
-          >
-            Verify Payments ({cards.pendingPaymentVerification ?? 0})
-          </IonButton>
-          <IonButton
-            fill="clear"
-            color="medium"
-            onClick={() => history.push('/admin/reports')}
-            style={{ height: '46px' }}
-          >
-            Reports
-          </IonButton>
-        </div>
-
-        {/* Recent Payment Submissions */}
-        <div style={{ marginTop: '24px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-            <h3 style={{ fontSize: '17px', fontWeight: '800', margin: 0, color: '#0f172a' }}>
-              Recent Payment Proofs
-            </h3>
-            <IonButton fill="clear" size="small" onClick={() => history.push('/admin/payments')} style={{ fontWeight: 700 }}>
-              See All <IonIcon icon={arrowForwardOutline} slot="end" />
-            </IonButton>
-          </div>
-
-          <IonCard style={{ margin: 0, borderRadius: '20px' }}>
-            <IonCardContent style={{ padding: '8px' }}>
-              <IonList lines="none">
-                {stats?.recentPayments?.length > 0 ? (
-                  stats.recentPayments.map((p: any) => (
-                    <IonItem key={p._id} style={{ '--padding-start': '10px', '--padding-end': '10px' }}>
-                      <IonLabel>
-                        <h4 style={{ fontWeight: 800, fontSize: '15px', color: '#0f172a' }}>
-                          {p.residentId?.fullName || 'Resident'}
-                        </h4>
-                        <p style={{ fontSize: '12px', color: '#64748b' }}>
-                          {p.paymentMethod} • Ref: {p.transactionId || 'UTR'} • {new Date(p.paymentDate).toLocaleDateString()}
-                        </p>
-                      </IonLabel>
-                      <div slot="end" style={{ textAlign: 'right' }}>
-                        <div style={{ fontWeight: 800, fontSize: '15px', color: '#0f172a' }}>
-                          ₹{p.amount.toLocaleString('en-IN')}
-                        </div>
-                        <span
-                          className={
-                            p.status === 'Approved'
-                              ? 'badge-tag badge-paid'
-                              : p.status === 'Pending'
-                              ? 'badge-tag badge-pending'
-                              : 'badge-tag badge-overdue'
-                          }
-                        >
-                          {p.status}
-                        </span>
-                      </div>
-                    </IonItem>
-                  ))
-                ) : (
-                  <div style={{ padding: '24px', textAlign: 'center', color: '#94a3b8' }}>
-                    No payment submissions yet for this cycle.
-                  </div>
-                )}
-              </IonList>
-            </IonCardContent>
-          </IonCard>
-        </div>
+              )) : <div className="empty-payments">{loading ? 'Loading recent payments…' : 'No payment submissions yet.'}</div>}
+            </IonCardContent></IonCard>
+          </section>
+        </main>
       </IonContent>
     </IonPage>
   );
