@@ -4,13 +4,45 @@
 .resident-dashboard .brand-wordmark strong span { color: #f2c982; }
 
 .resident-main { max-width: 700px; margin: 0 auto; padding: 16px 16px calc(98px + env(safe-area-inset-bottom)); color: #303b3c; }
-.resident-welcome { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 20px; border: 1px solid #e8e2d6; border-radius: 22px; background: linear-gradient(135deg,#fff 0%,#f1eee5 100%); box-shadow: 0 7px 20px rgba(48,59,60,.055); }
-.resident-kicker { display: inline-flex; align-items: center; gap: 5px; color: #326d75; font-size: 9px; font-weight: 800; letter-spacing: .11em; }
-.resident-kicker ion-icon { font-size: 13px; }
-.resident-welcome h1 { margin: 6px 0 3px; color: #303b3c; font: 800 23px/1.15 'Manrope',sans-serif; letter-spacing: -.045em; }
-.resident-welcome p { max-width: 215px; color: #7f8986; font-size: 11px; }
-.room-pill { display: flex; align-items: center; gap: 5px; flex: 0 0 auto; margin-top: 2px; padding: 7px 9px; border-radius: 99px; color: #326d75; background: #e5eeea; font-size: 9px; font-weight: 700; }
-.room-pill ion-icon { font-size: 12px; }
+.resident-welcome { 
+  display: flex; 
+  align-items: flex-start; 
+  justify-content: space-between; 
+  gap: 12px; 
+  padding: 22px 20px; 
+  border-radius: 22px; 
+  background: linear-gradient(145deg, #397b80 0%, #326d75 55%, #285b62 100%); 
+  color: #ffffff;
+  box-shadow: 0 10px 24px rgba(37, 86, 93, 0.22); 
+}
+.resident-kicker { 
+  display: inline-flex; 
+  align-items: center; 
+  gap: 5px; 
+  color: rgba(255, 255, 255, 0.85); 
+  font-size: 9px; 
+  font-weight: 800; 
+  letter-spacing: .11em; 
+}
+.resident-kicker ion-icon { font-size: 13px; color: #f2c982; }
+.resident-welcome h1 { margin: 6px 0 3px; color: #ffffff; font: 800 23px/1.15 'Manrope',sans-serif; letter-spacing: -.045em; }
+.resident-welcome p { max-width: 215px; color: rgba(255, 255, 255, 0.78); font-size: 11px; }
+.room-pill { 
+  display: flex; 
+  align-items: center; 
+  gap: 5px; 
+  flex: 0 0 auto; 
+  margin-top: 2px; 
+  padding: 7px 11px; 
+  border-radius: 99px; 
+  color: #ffffff; 
+  background: rgba(255, 255, 255, 0.18); 
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  font-size: 10px; 
+  font-weight: 700; 
+  backdrop-filter: blur(4px);
+}
+.room-pill ion-icon { font-size: 13px; color: #f2c982; }
 .rent-summary { margin-top: 13px; padding: 18px; border: 1px solid #e8e2d6; border-radius: 21px; background: #fff; box-shadow: 0 7px 20px rgba(48,59,60,.055); }
 .rent-summary-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
 .section-kicker { display: block; color: #87918e; font-size: 8px; font-weight: 800; letter-spacing: .13em; }
