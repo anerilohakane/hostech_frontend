@@ -1,4 +1,4 @@
-﻿.admin-dashboard {
+.admin-dashboard {
   --ht-green: #326d75;
   --ht-ink: #303b3c;
   --ht-subtle: #7c8e86;
@@ -12,7 +12,7 @@
 }
 .dashboard-brand { display: flex; align-items: center; padding-left: 12px; }
 .brand-wordmark { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; line-height: 1; }
-.brand-wordmark strong { color: #fff; font: 800 15px/1 'Manrope', sans-serif; letter-spacing: -.045em; }
+.brand-wordmark strong { color: #fff; font: 800 20px/1 'Manrope', sans-serif; letter-spacing: -.03em; }
 .brand-wordmark strong span { color: #f2c982; }
 .dashboard-toolbar ion-button { --color: #fff; }
 .dashboard-content { --background: #f7f5f0 !important; }

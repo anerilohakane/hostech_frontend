@@ -55,7 +55,9 @@ const Login: React.FC = () => {
     <IonPage className="login-page">
       <IonContent fullscreen className="auth-content">
         <style>{`
-          .auth-content { --background: #f7f5f0; }
+          .auth-content { 
+            --background: linear-gradient(180deg, #326d75 0%, #326d75 320px, #f7f5f0 320px, #f7f5f0 100%) !important; 
+          }
           .auth-layout {
             box-sizing: border-box;
             display: flex;
@@ -63,10 +65,10 @@ const Login: React.FC = () => {
             min-height: 100dvh;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             gap: 0;
-            padding: max(18px, env(safe-area-inset-top)) 12px max(18px, env(safe-area-inset-bottom));
-            background: #f7f5f0;
+            padding: 0 12px max(18px, env(safe-area-inset-bottom));
+            background: transparent;
             color: #303b3c;
             font-family: var(--ion-font-family);
           }
@@ -79,9 +81,11 @@ const Login: React.FC = () => {
             max-width: 440px;
             min-height: 220px;
             overflow: hidden;
-            padding: 24px 23px 38px;
+            padding: calc(16px + env(safe-area-inset-top, 0px)) 23px 38px;
+            margin-top: 0;
             border: 1px solid rgba(255,255,255,.12);
-            border-radius: 24px;
+            border-top: none;
+            border-radius: 0 0 24px 24px;
             color: #fff;
             background: linear-gradient(145deg, #397b80 0%, #326d75 55%, #285b62 100%);
             box-shadow: 0 12px 28px rgba(37,86,93,.2);
