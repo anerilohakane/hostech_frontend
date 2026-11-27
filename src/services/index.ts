@@ -5,6 +5,14 @@ export const authService = {
     const res = await apiClient.post('/auth/login', { email, password });
     return res.data;
   },
+  resetPassword: async (email: string, newPassword: string) => {
+    const res = await apiClient.post('/auth/reset-password', { email, newPassword });
+    return res.data;
+  },
+  registerPG: async (data: any) => {
+    const res = await apiClient.post('/auth/register-pg', data);
+    return res.data;
+  },
   getMe: async () => {
     const res = await apiClient.get('/auth/me');
     return res.data;
@@ -121,7 +129,9 @@ export const documentService = {
     return res.data.document;
   },
   getFileUrl: (id: string) => {
-    return `${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/documents/${id}/file`;
+    const token = localStorage.getItem('token');
+    const baseUrl = `${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/documents/${id}/file`;
+    return token ? `${baseUrl}?token=${encodeURIComponent(token)}` : baseUrl;
   },
 };
 
@@ -335,6 +345,55 @@ export const electricityService = {
     const res = await apiClient.post('/electricity', data);
     return res.data.record;
   },
+  billResident: async (data: { residentId: string; rentMonth: string; unitsConsumed?: number; ratePerUnit?: number; fixedAmount?: number; notes?: string }) => {
+    const res = await apiClient.post('/electricity/bill-resident', data);
+    return res.data;
+  },
+  billRoom: async (formData: FormData) => {
+    const res = await apiClient.post('/electricity/bill-room', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return res.data;
+  },
 };
+
+export const vendorService = {
+  getOverview: async () => {
+    const res = await apiClient.get('/vendor/overview');
+    return res.data;
+  },
+  getOrganizations: async (params?: { search?: string; status?: string }) => {
+    const res = await apiClient.get('/vendor/organizations', { params });
+    return res.data.organizations;
+  },
+  updateOrganization: async (data: { organizationId: string; action: string; planId?: string; extendDays?: number }) => {
+    const res = await apiClient.patch('/vendor/organizations', data);
+    return res.data;
+  },
+  getTickets: async () => {
+    const res = await apiClient.get('/vendor/support');
+    return res.data.tickets;
+  },
+  updateTicket: async (data: { ticketId: string; status?: string; responseMessage?: string }) => {
+    const res = await apiClient.patch('/vendor/support', data);
+    return res.data;
+  },
+  createTicket: async (data: { category: string; subject: string; description: string; priority?: string }) => {
+    const res = await apiClient.post('/vendor/support', data);
+    return res.data;
+  },
+};
+
+export const subscriptionService = {
+  getPlans: async () => {
+    const res = await apiClient.get('/subscriptions/plans');
+    return res.data.plans;
+  },
+  savePlan: async (data: any) => {
+    const res = await apiClient.post('/subscriptions/plans', data);
+    return res.data;
+  },
+};
+
 
 

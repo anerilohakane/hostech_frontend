@@ -29,6 +29,9 @@ import {
   createOutline,
   lockClosedOutline,
   closeOutline,
+  cardOutline,
+  flashOutline,
+  walletOutline,
 } from 'ionicons/icons';
 import { useAuth } from '../../context/AuthContext';
 import { propertyService, settingsService, authService } from '../../services';
@@ -41,12 +44,31 @@ const AdminProfilePage: React.FC = () => {
   const [showLogoutAlert, setShowLogoutAlert] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [bankingModalOpen, setBankingModalOpen] = useState(false);
+  const [lightBillingModalOpen, setLightBillingModalOpen] = useState(false);
 
   // Edit Form State
   const [editForm, setEditForm] = useState({
     name: '',
     phone: '',
     password: '',
+  });
+
+  // Banking Form State
+  const [bankingForm, setBankingForm] = useState({
+    upiId: '',
+    accountName: '',
+    accountNumber: '',
+    ifscCode: '',
+    bankName: '',
+  });
+
+  // Light Billing Form State
+  const [lightBillingForm, setLightBillingForm] = useState({
+    chargeElectricitySeparately: false,
+    electricityBillingType: 'per_unit' as 'per_unit' | 'fixed_monthly',
+    electricityRatePerUnit: 10,
+    electricityFixedMonthly: 500,
   });
 
   const fetchData = async () => {
@@ -58,6 +80,21 @@ const AdminProfilePage: React.FC = () => {
       ]);
       setProperties(props);
       setAppSettings(sets);
+      if (sets) {
+        setBankingForm({
+          upiId: sets.upiId || '',
+          accountName: sets.bankDetails?.accountName || '',
+          accountNumber: sets.bankDetails?.accountNumber || '',
+          ifscCode: sets.bankDetails?.ifscCode || '',
+          bankName: sets.bankDetails?.bankName || '',
+        });
+        setLightBillingForm({
+          chargeElectricitySeparately: Boolean(sets.chargeElectricitySeparately),
+          electricityBillingType: sets.electricityBillingType || 'per_unit',
+          electricityRatePerUnit: Number(sets.electricityRatePerUnit) || 10,
+          electricityFixedMonthly: Number(sets.electricityFixedMonthly) || 500,
+        });
+      }
       if (meRes?.user) {
         setEditForm({
           name: meRes.user.name || '',
@@ -93,6 +130,43 @@ const AdminProfilePage: React.FC = () => {
       await fetchData();
     } catch (err: any) {
       setToastMessage(err.response?.data?.error || 'Failed to update profile');
+    }
+  };
+
+  const handleSaveBanking = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await settingsService.updateSettings({
+        upiId: bankingForm.upiId.trim(),
+        bankDetails: {
+          accountName: bankingForm.accountName.trim(),
+          accountNumber: bankingForm.accountNumber.trim(),
+          ifscCode: bankingForm.ifscCode.trim().toUpperCase(),
+          bankName: bankingForm.bankName.trim(),
+        },
+      });
+      setToastMessage('Bank account and UPI details updated!');
+      setBankingModalOpen(false);
+      await fetchData();
+    } catch (err: any) {
+      setToastMessage(err.response?.data?.error || 'Failed to update banking details');
+    }
+  };
+
+  const handleSaveLightBilling = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await settingsService.updateSettings({
+        chargeElectricitySeparately: lightBillingForm.chargeElectricitySeparately,
+        electricityBillingType: lightBillingForm.electricityBillingType,
+        electricityRatePerUnit: Number(lightBillingForm.electricityRatePerUnit),
+        electricityFixedMonthly: Number(lightBillingForm.electricityFixedMonthly),
+      });
+      setToastMessage('Light billing configuration updated!');
+      setLightBillingModalOpen(false);
+      await fetchData();
+    } catch (err: any) {
+      setToastMessage(err.response?.data?.error || 'Failed to update light billing configuration');
     }
   };
 
@@ -212,15 +286,21 @@ const AdminProfilePage: React.FC = () => {
         {/* Payment & Settings Configuration */}
         <IonCard style={{ margin: '0 0 16px 0', border: '1px solid #e2e8f0' }}>
           <IonCardContent style={{ padding: '16px' }}>
-            <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#0f172a', margin: '0 0 12px 0' }}>
-              PG Banking & Payment Configuration
-            </h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+              <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#0f172a', margin: 0 }}>
+                PG Banking & Account Setup
+              </h3>
+              <IonButton size="small" fill="outline" onClick={() => setBankingModalOpen(true)}>
+                <IonIcon icon={walletOutline} slot="start" />
+                Manage Banking
+              </IonButton>
+            </div>
             <IonList lines="full">
               <IonItem>
                 <IonLabel>
                   <p style={{ fontSize: '11px', color: '#64748b' }}>Official UPI ID</p>
-                  <h4 style={{ fontWeight: '700', color: '#2563eb' }}>
-                    {appSettings?.upiId || 'pgmanagement@okhdfcbank'}
+                  <h4 style={{ fontWeight: '700', color: '#326d75' }}>
+                    {appSettings?.upiId || 'Not configured yet'}
                   </h4>
                 </IonLabel>
               </IonItem>
@@ -228,11 +308,50 @@ const AdminProfilePage: React.FC = () => {
                 <IonLabel>
                   <p style={{ fontSize: '11px', color: '#64748b' }}>Bank Account</p>
                   <h4 style={{ fontWeight: '600' }}>
-                    {appSettings?.bankDetails?.bankName || 'HDFC Bank'} - {appSettings?.bankDetails?.accountNumber || '50200012345678'}
+                    {appSettings?.bankDetails?.bankName ? `${appSettings.bankDetails.bankName} - ${appSettings.bankDetails.accountNumber}` : 'No bank account added'}
                   </h4>
-                  <small style={{ color: '#64748b' }}>IFSC: {appSettings?.bankDetails?.ifscCode || 'HDFC0001234'}</small>
+                  <small style={{ color: '#64748b' }}>
+                    A/C Name: {appSettings?.bankDetails?.accountName || 'N/A'} • IFSC: {appSettings?.bankDetails?.ifscCode || 'N/A'}
+                  </small>
                 </IonLabel>
               </IonItem>
+            </IonList>
+          </IonCardContent>
+        </IonCard>
+
+        {/* Light Billing Management Card */}
+        <IonCard style={{ margin: '0 0 16px 0', border: '1px solid #e2e8f0' }}>
+          <IonCardContent style={{ padding: '16px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+              <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#0f172a', margin: 0 }}>
+                Electricity & Light Billing
+              </h3>
+              <IonButton size="small" fill="outline" color="secondary" onClick={() => setLightBillingModalOpen(true)}>
+                <IonIcon icon={flashOutline} slot="start" />
+                Manage Light Bill
+              </IonButton>
+            </div>
+            <IonList lines="full">
+              <IonItem>
+                <IonLabel>
+                  <p style={{ fontSize: '11px', color: '#64748b' }}>Light Bill Status</p>
+                  <h4 style={{ fontWeight: '700', color: appSettings?.chargeElectricitySeparately ? '#eab308' : '#10b981' }}>
+                    {appSettings?.chargeElectricitySeparately ? '⚡ Charged Extra to Tenants' : '✓ Included in Rent'}
+                  </h4>
+                </IonLabel>
+              </IonItem>
+              {appSettings?.chargeElectricitySeparately && (
+                <IonItem>
+                  <IonLabel>
+                    <p style={{ fontSize: '11px', color: '#64748b' }}>Billing Structure</p>
+                    <h4 style={{ fontWeight: '600' }}>
+                      {appSettings?.electricityBillingType === 'per_unit'
+                        ? `Metered: ₹${appSettings?.electricityRatePerUnit || 10} / unit`
+                        : `Fixed: ₹${appSettings?.electricityFixedMonthly || 500} / tenant / month`}
+                    </h4>
+                  </IonLabel>
+                </IonItem>
+              )}
             </IonList>
           </IonCardContent>
         </IonCard>
@@ -298,6 +417,163 @@ const AdminProfilePage: React.FC = () => {
 
               <IonButton expand="block" type="submit" color="primary" style={{ height: '48px' }}>
                 Save Profile Changes
+              </IonButton>
+            </form>
+          </IonContent>
+        </IonModal>
+
+        {/* Manage Banking Modal */}
+        <IonModal isOpen={bankingModalOpen} onDidDismiss={() => setBankingModalOpen(false)}>
+          <IonHeader>
+            <IonToolbar>
+              <IonTitle>Manage Bank Account & UPI</IonTitle>
+              <IonButtons slot="end">
+                <IonButton onClick={() => setBankingModalOpen(false)} style={{ color: '#ffffff', fontWeight: 800 }}>
+                  <IonIcon icon={closeOutline} slot="start" style={{ fontSize: '20px' }} />
+                  Cancel
+                </IonButton>
+              </IonButtons>
+            </IonToolbar>
+          </IonHeader>
+          <IonContent className="ion-padding">
+            <form onSubmit={handleSaveBanking}>
+              <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '16px' }}>
+                Tenants will send their monthly rent to this UPI ID or Bank Account:
+              </p>
+
+              <IonItem lines="inset" style={{ '--padding-start': '0', marginBottom: '14px' }}>
+                <IonLabel position="stacked" style={{ fontWeight: '600' }}>Official UPI ID (e.g. yourpg@okhdfcbank)</IonLabel>
+                <IonInput
+                  placeholder="yourname@okaxis"
+                  value={bankingForm.upiId}
+                  onIonChange={(e) => setBankingForm({ ...bankingForm, upiId: e.detail.value! })}
+                />
+              </IonItem>
+
+              <IonItem lines="inset" style={{ '--padding-start': '0', marginBottom: '14px' }}>
+                <IonLabel position="stacked" style={{ fontWeight: '600' }}>Account Holder Name</IonLabel>
+                <IonInput
+                  placeholder="e.g. PG Owner or Property Name"
+                  value={bankingForm.accountName}
+                  onIonChange={(e) => setBankingForm({ ...bankingForm, accountName: e.detail.value! })}
+                />
+              </IonItem>
+
+              <IonItem lines="inset" style={{ '--padding-start': '0', marginBottom: '14px' }}>
+                <IonLabel position="stacked" style={{ fontWeight: '600' }}>Bank Name</IonLabel>
+                <IonInput
+                  placeholder="e.g. HDFC Bank / SBI / ICICI"
+                  value={bankingForm.bankName}
+                  onIonChange={(e) => setBankingForm({ ...bankingForm, bankName: e.detail.value! })}
+                />
+              </IonItem>
+
+              <IonItem lines="inset" style={{ '--padding-start': '0', marginBottom: '14px' }}>
+                <IonLabel position="stacked" style={{ fontWeight: '600' }}>Bank Account Number</IonLabel>
+                <IonInput
+                  type="text"
+                  placeholder="e.g. 50200012345678"
+                  value={bankingForm.accountNumber}
+                  onIonChange={(e) => setBankingForm({ ...bankingForm, accountNumber: e.detail.value! })}
+                />
+              </IonItem>
+
+              <IonItem lines="inset" style={{ '--padding-start': '0', marginBottom: '24px' }}>
+                <IonLabel position="stacked" style={{ fontWeight: '600' }}>Bank IFSC Code</IonLabel>
+                <IonInput
+                  placeholder="e.g. HDFC0001234"
+                  value={bankingForm.ifscCode}
+                  onIonChange={(e) => setBankingForm({ ...bankingForm, ifscCode: e.detail.value! })}
+                />
+              </IonItem>
+
+              <IonButton expand="block" type="submit" color="primary" style={{ height: '48px', fontWeight: 700 }}>
+                Save Banking Details
+              </IonButton>
+            </form>
+          </IonContent>
+        </IonModal>
+
+        {/* Manage Light Billing Modal */}
+        <IonModal isOpen={lightBillingModalOpen} onDidDismiss={() => setLightBillingModalOpen(false)}>
+          <IonHeader>
+            <IonToolbar>
+              <IonTitle>Manage Light Billing</IonTitle>
+              <IonButtons slot="end">
+                <IonButton onClick={() => setLightBillingModalOpen(false)} style={{ color: '#ffffff', fontWeight: 800 }}>
+                  <IonIcon icon={closeOutline} slot="start" style={{ fontSize: '20px' }} />
+                  Cancel
+                </IonButton>
+              </IonButtons>
+            </IonToolbar>
+          </IonHeader>
+          <IonContent className="ion-padding">
+            <form onSubmit={handleSaveLightBilling}>
+              <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0', marginBottom: '16px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <strong style={{ fontSize: '14px', color: '#0f172a', display: 'block' }}>Charge Light Bill Separately?</strong>
+                    <span style={{ fontSize: '12px', color: '#64748b' }}>Collect electricity surcharge extra from tenants</span>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={lightBillingForm.chargeElectricitySeparately}
+                    onChange={(e) => setLightBillingForm({ ...lightBillingForm, chargeElectricitySeparately: e.target.checked })}
+                    style={{ width: '20px', height: '20px', accentColor: '#326d75', cursor: 'pointer' }}
+                  />
+                </div>
+              </div>
+
+              {lightBillingForm.chargeElectricitySeparately && (
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#334155', marginBottom: '8px' }}>
+                    Billing Calculation Method
+                  </label>
+                  <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+                    <IonButton
+                      fill={lightBillingForm.electricityBillingType === 'per_unit' ? 'solid' : 'outline'}
+                      color="primary"
+                      style={{ flex: 1 }}
+                      onClick={() => setLightBillingForm({ ...lightBillingForm, electricityBillingType: 'per_unit' })}
+                    >
+                      Metered (Per Unit)
+                    </IonButton>
+                    <IonButton
+                      fill={lightBillingForm.electricityBillingType === 'fixed_monthly' ? 'solid' : 'outline'}
+                      color="primary"
+                      style={{ flex: 1 }}
+                      onClick={() => setLightBillingForm({ ...lightBillingForm, electricityBillingType: 'fixed_monthly' })}
+                    >
+                      Fixed Monthly
+                    </IonButton>
+                  </div>
+
+                  {lightBillingForm.electricityBillingType === 'per_unit' ? (
+                    <IonItem lines="inset" style={{ '--padding-start': '0', marginBottom: '24px' }}>
+                      <IonLabel position="stacked" style={{ fontWeight: '600' }}>Rate Per Electricity Unit (₹/kWh)</IonLabel>
+                      <IonInput
+                        type="number"
+                        placeholder="10"
+                        value={lightBillingForm.electricityRatePerUnit}
+                        onIonChange={(e) => setLightBillingForm({ ...lightBillingForm, electricityRatePerUnit: Number(e.detail.value) })}
+                      />
+                    </IonItem>
+                  ) : (
+                    <IonItem lines="inset" style={{ '--padding-start': '0', marginBottom: '24px' }}>
+                      <IonLabel position="stacked" style={{ fontWeight: '600' }}>Fixed Monthly Charge Per Tenant (₹)</IonLabel>
+                      <IonInput
+                        type="number"
+                        placeholder="500"
+                        value={lightBillingForm.electricityFixedMonthly}
+                        onIonChange={(e) => setLightBillingForm({ ...lightBillingForm, electricityFixedMonthly: Number(e.detail.value) })}
+                      />
+                    </IonItem>
+                  )}
+                </div>
+              )}
+
+              <IonButton expand="block" type="submit" color="primary" style={{ height: '48px', fontWeight: 700 }}>
+                Save Light Bill Settings
               </IonButton>
             </form>
           </IonContent>

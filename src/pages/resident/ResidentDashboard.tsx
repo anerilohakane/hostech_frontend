@@ -6,7 +6,7 @@ import {
 import {
   cardOutline, documentTextOutline, chatbubbleEllipsesOutline, notificationsOutline,
   logOutOutline, homeOutline, shieldCheckmarkOutline, calendarOutline, arrowForwardOutline,
-  wifiOutline, restaurantOutline,
+  wifiOutline, restaurantOutline, flashOutline, eyeOutline,
 } from 'ionicons/icons';
 import { rentService, paymentService, authService } from '../../services';
 import { useAuth } from '../../context/AuthContext';
@@ -73,17 +73,60 @@ const ResidentDashboard: React.FC = () => {
               <span className={`rent-status ${rentIsDue ? 'status-due' : 'status-paid'}`}>{currentRent?.status || (loading ? 'Checking' : 'Paid')}</span>
             </div>
             <div className="rent-amount">₹{outstanding.toLocaleString('en-IN')}</div>
+            {currentRent?.electricityAmount > 0 && (
+              <div style={{
+                background: 'rgba(255, 255, 255, 0.12)',
+                borderRadius: '12px',
+                padding: '10px 14px',
+                margin: '10px 0',
+                fontSize: '13px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '4px',
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ color: '#fef08a', display: 'flex', alignItems: 'center', gap: '5px', fontWeight: 700 }}>
+                    <IonIcon icon={flashOutline} /> Room Light Bill
+                  </span>
+                  <strong style={{ color: '#ffffff' }}>₹{currentRent.electricityAmount.toLocaleString('en-IN')}</strong>
+                </div>
+                <div style={{ fontSize: '11px', color: '#e2e8f0', display: 'flex', justifyContent: 'space-between' }}>
+                  <span>
+                    Rent: ₹{currentRent.rentAmount?.toLocaleString('en-IN')} + Electricity: ₹{currentRent.electricityAmount?.toLocaleString('en-IN')}
+                  </span>
+                  {currentRent.electricityBillUrl && (() => {
+                    const token = localStorage.getItem('token');
+                    const rawUrl = currentRent.electricityBillUrl.startsWith('http')
+                      ? currentRent.electricityBillUrl
+                      : `http://localhost:5000${currentRent.electricityBillUrl}`;
+                    const finalUrl = token && !rawUrl.includes('token=')
+                      ? `${rawUrl}${rawUrl.includes('?') ? '&' : '?'}token=${encodeURIComponent(token)}`
+                      : rawUrl;
+                    return (
+                      <a
+                        href={finalUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: '#93c5fd', textDecoration: 'underline', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '2px' }}
+                      >
+                        <IonIcon icon={eyeOutline} /> View Bill Copy
+                      </a>
+                    );
+                  })()}
+                </div>
+              </div>
+            )}
             <div className="rent-due-date"><IonIcon icon={calendarOutline} /> {currentRent?.dueDate ? `Due ${new Date(currentRent.dueDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}` : 'Current balance'}</div>
             <div className="rent-actions">
               {rentIsDue && <IonButton onClick={() => history.push('/resident/pay')}><IonIcon icon={cardOutline} slot="start" /> Pay rent</IonButton>}
-              <IonButton fill="outline" onClick={() => history.push('/resident/payments')}>Payment history</IonButton>
+              <IonButton fill="outline" onClick={() => history.push('/resident/history')}>Payment history</IonButton>
             </div>
           </section>
 
           <section className="resident-services">
             <div className="resident-section-title"><div><span className="section-kicker">AT YOUR FINGERTIPS</span><h2>Quick services</h2></div><span>Available anytime</span></div>
             <div className="resident-service-grid">
-              <button className="resident-service" onClick={() => history.push('/resident/payments')}><span className="service-icon service-teal"><IonIcon icon={documentTextOutline} /></span><strong>Receipts</strong><small>Payments & history</small></button>
+              <button className="resident-service" onClick={() => history.push('/resident/history')}><span className="service-icon service-teal"><IonIcon icon={documentTextOutline} /></span><strong>Receipts</strong><small>Payments & history</small></button>
               <button className="resident-service" onClick={() => history.push('/resident/complaints')}><span className="service-icon service-clay"><IonIcon icon={chatbubbleEllipsesOutline} /></span><strong>Get help</strong><small>Requests & complaints</small></button>
               <button className="resident-service" onClick={() => history.push('/resident/documents')}><span className="service-icon service-sage"><IonIcon icon={shieldCheckmarkOutline} /></span><strong>Documents</strong><small>Agreements & KYC</small></button>
               <button className="resident-service" onClick={() => history.push('/resident/profile')}><span className="service-icon service-sand"><IonIcon icon={homeOutline} /></span><strong>My room</strong><small>Stay & profile details</small></button>
@@ -101,7 +144,7 @@ const ResidentDashboard: React.FC = () => {
           {recentReceipt && <IonCard className="recent-receipt"><IonCardContent>
             <div className="receipt-icon"><IonIcon icon={cardOutline} /></div>
             <div className="receipt-copy"><span className="section-kicker">LATEST RECEIPT</span><strong>₹{recentReceipt.amount?.toLocaleString('en-IN')} paid</strong><small>{recentReceipt.rentMonth} · {recentReceipt.paymentMethod}</small></div>
-            <IonButton fill="clear" onClick={() => history.push('/resident/payments')} aria-label="View payment receipt"><IonIcon icon={arrowForwardOutline} /></IonButton>
+            <IonButton fill="clear" onClick={() => history.push('/resident/history')} aria-label="View payment receipt"><IonIcon icon={arrowForwardOutline} /></IonButton>
           </IonCardContent></IonCard>}
         </main>
       </IonContent>

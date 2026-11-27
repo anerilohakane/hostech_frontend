@@ -7,6 +7,7 @@ import {
   IonIcon,
   IonLoading,
   IonToast,
+  IonModal,
 } from '@ionic/react';
 import {
   lockClosedOutline,
@@ -15,6 +16,7 @@ import {
   eyeOffOutline,
   arrowForwardOutline,
   shieldCheckmarkOutline,
+  businessOutline,
 } from 'ionicons/icons';
 import { useAuth } from '../context/AuthContext';
 import { authService } from '../services';
@@ -26,13 +28,45 @@ const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [showForgotModal, setShowForgotModal] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [resetLoading, setResetLoading] = useState(false);
   const { login } = useAuth();
   const history = useHistory();
 
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!forgotEmail.trim() || !newPassword.trim()) {
+      setToastMessage('Please enter email and new password');
+      return;
+    }
+    if (newPassword.trim().length < 6) {
+      setToastMessage('New password must be at least 6 characters');
+      return;
+    }
+    setResetLoading(true);
+    try {
+      const res = await authService.resetPassword(forgotEmail.trim().toLowerCase(), newPassword.trim());
+      setToastMessage(res.message || 'Password updated! Please login with your new password.');
+      setPassword(newPassword.trim());
+      setEmail(forgotEmail.trim().toLowerCase());
+      setShowForgotModal(false);
+    } catch (err: any) {
+      setToastMessage(err.response?.data?.error || 'Failed to update password');
+    } finally {
+      setResetLoading(false);
+    }
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const cleanEmail = email.trim().toLowerCase();
-    const cleanPassword = password.trim();
+    const formTarget = e.currentTarget as HTMLFormElement;
+    const formEmailInput = (formTarget?.elements?.namedItem('email') as HTMLInputElement)?.value;
+    const formPasswordInput = (formTarget?.elements?.namedItem('password') as HTMLInputElement)?.value;
+
+    const cleanEmail = (email || formEmailInput || '').trim().toLowerCase();
+    const cleanPassword = (password || formPasswordInput || '').trim();
 
     if (!cleanEmail || !cleanPassword) {
       setToastMessage('Please enter your email and password');
@@ -43,7 +77,13 @@ const Login: React.FC = () => {
     try {
       const res = await authService.login(cleanEmail, cleanPassword);
       login(res.token, res.user);
-      history.replace(res.user.role === 'admin' ? '/admin/dashboard' : '/resident/dashboard');
+      if (res.user.role === 'vendor') {
+        history.replace('/vendor');
+      } else if (res.user.role === 'admin' || res.user.role === 'staff') {
+        history.replace('/admin/dashboard');
+      } else {
+        history.replace('/resident/dashboard');
+      }
     } catch (err: any) {
       setToastMessage(err.response?.data?.error || 'Invalid credentials');
     } finally {
@@ -462,6 +502,7 @@ const Login: React.FC = () => {
                     type="email"
                     value={email}
                     placeholder="you@example.com"
+                    onIonInput={(e) => setEmail(e.detail.value || '')}
                     onIonChange={(e) => setEmail(e.detail.value || '')}
                     autocomplete="email"
                     required
@@ -479,6 +520,7 @@ const Login: React.FC = () => {
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     placeholder="Enter your password"
+                    onIonInput={(e) => setPassword(e.detail.value || '')}
                     onIonChange={(e) => setPassword(e.detail.value || '')}
                     autocomplete="current-password"
                     required
@@ -517,6 +559,33 @@ const Login: React.FC = () => {
             <div className="auth-safe-note">
               <IonIcon icon={shieldCheckmarkOutline} aria-hidden="true" />
               <span>Your account is protected</span>
+            </div>
+
+            <div style={{ marginTop: '18px', paddingTop: '16px', borderTop: '1px solid #edf0ed' }}>
+              <div style={{ textAlign: 'center', marginBottom: '10px' }}>
+                <span style={{ fontSize: '11px', fontWeight: 600, color: '#7c8e8a', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Are you a PG / Hostel Owner?
+                </span>
+              </div>
+              <IonButton
+                expand="block"
+                fill="outline"
+                routerLink="/register-pg"
+                style={{
+                  '--border-color': '#326d75',
+                  '--border-width': '1.5px',
+                  '--color': '#326d75',
+                  '--border-radius': '12px',
+                  height: '46px',
+                  fontSize: '13px',
+                  fontWeight: 800,
+                  letterSpacing: '0.02em',
+                }}
+              >
+                <IonIcon icon={businessOutline} slot="start" style={{ fontSize: '16px', marginRight: '6px' }} />
+                <span>Register your PG</span>
+                <IonIcon icon={arrowForwardOutline} slot="end" style={{ fontSize: '15px' }} />
+              </IonButton>
             </div>
           </section>
         </main>

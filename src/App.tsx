@@ -55,6 +55,9 @@ import ResidentComplaints from './pages/resident/ResidentComplaints';
 import ResidentNotifications from './pages/resident/ResidentNotifications';
 import ResidentProfilePage from './pages/resident/ResidentProfile';
 
+import VendorDashboard from './pages/vendor/VendorDashboard';
+import RegisterPG from './pages/auth/RegisterPG';
+
 setupIonicReact();
 
 const AdminTabs: React.FC = () => (
@@ -104,7 +107,8 @@ const ResidentTabs: React.FC = () => (
     <IonRouterOutlet>
       <Route exact path="/resident/dashboard" component={ResidentDashboard} />
       <Route exact path="/resident/pay" component={ResidentPay} />
-      <Route exact path="/resident/payments" component={ResidentPayments} />
+      <Route exact path="/resident/history" component={ResidentPayments} />
+      <Route exact path="/resident/payments" render={() => <Redirect to="/resident/history" />} />
       <Route exact path="/resident/documents" component={ResidentDocuments} />
       <Route exact path="/resident/complaints" component={ResidentComplaints} />
       <Route exact path="/resident/notifications" component={ResidentNotifications} />
@@ -119,7 +123,7 @@ const ResidentTabs: React.FC = () => (
         <IonIcon icon={cardOutline} />
         <IonLabel>Pay Rent</IonLabel>
       </IonTabButton>
-      <IonTabButton tab="payments" href="/resident/payments">
+      <IonTabButton tab="history" href="/resident/history">
         <IonIcon icon={documentTextOutline} />
         <IonLabel>History</IonLabel>
       </IonTabButton>
@@ -144,6 +148,11 @@ const AppRoutes: React.FC = () => {
     <IonReactRouter>
       <IonRouterOutlet>
         <Route exact path="/login" component={Login} />
+        <Route exact path="/register-pg" component={RegisterPG} />
+        <Route
+          path="/vendor"
+          render={() => (user?.role === 'vendor' ? <VendorDashboard /> : <Redirect to="/login" />)}
+        />
         <Route
           path="/admin"
           render={() => (user?.role === 'admin' ? <AdminTabs /> : <Redirect to="/login" />)}
@@ -157,6 +166,7 @@ const AppRoutes: React.FC = () => {
           path="/"
           render={() => {
             if (!user) return <Redirect to="/login" />;
+            if (user.role === 'vendor') return <Redirect to="/vendor" />;
             return user.role === 'admin' ? <Redirect to="/admin/dashboard" /> : <Redirect to="/resident/dashboard" />;
           }}
         />

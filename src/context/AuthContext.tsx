@@ -5,7 +5,10 @@ interface User {
   userId: string;
   name: string;
   email: string;
-  role: 'admin' | 'resident';
+  role: 'vendor' | 'admin' | 'staff' | 'resident';
+  organizationId?: string;
+  organizationStatus?: string;
+  permissions?: string[];
   residentId?: string;
   propertyId?: string;
 }

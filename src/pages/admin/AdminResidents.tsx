@@ -21,6 +21,7 @@ import {
   IonSearchbar,
   IonButtons,
   IonLoading,
+  useIonViewWillEnter,
 } from '@ionic/react';
 import { addOutline, businessOutline, eyeOutline, eyeOffOutline, mailOutline, lockClosedOutline, documentAttachOutline, cloudUploadOutline, checkmarkCircleOutline, closeOutline, closeCircleOutline, copyOutline } from 'ionicons/icons';
 import { residentService, propertyService, roomService } from '../../services';
@@ -133,6 +134,11 @@ const AdminResidents: React.FC = () => {
   useEffect(() => {
     loadPropertiesAndRooms();
   }, []);
+
+  useIonViewWillEnter(() => {
+    loadResidents();
+    loadPropertiesAndRooms();
+  });
 
   const openRegisterModal = async () => {
     // Refresh rooms and properties before opening modal
@@ -291,7 +297,7 @@ const AdminResidents: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      <IonContent className="ion-padding" style={{ '--background': '#090c12' }}>
+      <IonContent className="ion-padding">
         <IonSearchbar
           value={search}
           placeholder="Search by name, phone or email..."
@@ -319,7 +325,7 @@ const AdminResidents: React.FC = () => {
                     No Rooms Created Yet
                   </h4>
                   <p style={{ margin: 0, fontSize: '12px', color: '#c2410c' }}>
-                    You wiped the database. Please add a PG property and rooms first to allocate residents.
+                    Please add a PG property and rooms first to allocate residents.
                   </p>
                 </div>
                 <IonButton size="small" color="warning" onClick={() => history.push('/admin/rooms')}>
@@ -330,7 +336,7 @@ const AdminResidents: React.FC = () => {
           </IonCard>
         )}
 
-        <IonList lines="none" style={{ borderRadius: '16px', overflow: 'hidden' }}>
+        <IonList lines="none" style={{ borderRadius: '16px', overflow: 'hidden', background: 'transparent' }}>
           {residents.map((r) => (
             <IonItem
               key={r._id}
@@ -341,27 +347,27 @@ const AdminResidents: React.FC = () => {
                 '--padding-bottom': '12px',
                 '--padding-start': '14px',
                 '--padding-end': '14px',
-                background: '#111723',
-                marginBottom: '8px',
+                background: '#ffffff',
+                marginBottom: '10px',
                 borderRadius: '16px',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.02)',
+                border: '1px solid #ece8df',
+                boxShadow: '0 2px 8px rgba(46, 58, 57, 0.05)',
               }}
             >
               <IonLabel>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <h3 style={{ fontWeight: '800', fontSize: '16px', color: '#ffffff' }}>{r.fullName}</h3>
+                  <h3 style={{ fontWeight: '800', fontSize: '16px', color: 'var(--ht-text, #303b3c)' }}>{r.fullName}</h3>
                   <IonBadge color={r.status === 'Active' ? 'success' : r.status === 'Notice Period' ? 'warning' : 'medium'}>
                     {r.status}
                   </IonBadge>
                 </div>
-                <p style={{ color: '#94a3b8', fontSize: '13px', marginTop: '2px' }}>
-                  {r.propertyId?.name || 'PG'} • Room: <strong>{r.roomId?.roomNumber || 'N/A'}</strong> ({r.occupancyType || 'Single'})
+                <p style={{ color: '#64748b', fontSize: '13px', marginTop: '3px' }}>
+                  {r.propertyId?.name || 'PG'} • Room: <strong style={{ color: 'var(--ht-text, #303b3c)' }}>{r.roomId?.roomNumber || 'N/A'}</strong> ({r.occupancyType || 'Single'})
                 </p>
-                <p style={{ color: '#64748b', fontSize: '12px' }}>
-                  Phone: {r.phone} • Custom Rent: <strong style={{ color: '#16a34a' }}>₹{r.monthlyRent?.toLocaleString('en-IN')}/mo</strong>
+                <p style={{ color: '#64748b', fontSize: '12px', marginTop: '2px' }}>
+                  Phone: {r.phone} • Custom Rent: <strong style={{ color: 'var(--ht-primary, #326d75)' }}>₹{r.monthlyRent?.toLocaleString('en-IN')}/mo</strong>
                 </p>
-                <span style={{ fontSize: '11px', color: '#4f46e5', fontWeight: 700, display: 'inline-block', marginTop: '4px' }}>
+                <span style={{ fontSize: '11px', color: 'var(--ht-primary, #326d75)', fontWeight: 700, display: 'inline-block', marginTop: '4px' }}>
                   Click to view full profile & docs →
                 </span>
               </IonLabel>

@@ -173,16 +173,16 @@ const ResidentDetail: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      <IonContent fullscreen className="ion-padding" style={{ '--background': '#090c12' }}>
+      <IonContent fullscreen className="ion-padding">
         {/* Resident Header Profile Card */}
         <div
           style={{
-            background: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #4338ca 100%)',
+            background: 'var(--ht-primary, #326d75)',
             borderRadius: '24px',
             padding: '24px',
-            color: '#fff',
+            color: '#ffffff',
             marginBottom: '16px',
-            boxShadow: '0 12px 30px -4px rgba(49, 46, 129, 0.35)',
+            boxShadow: '0 8px 24px rgba(50, 109, 117, 0.25)',
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -190,43 +190,121 @@ const ResidentDetail: React.FC = () => {
               <span
                 style={{
                   background: resident.status === 'Active' ? '#22c55e' : '#f59e0b',
-                  color: '#fff',
+                  color: '#ffffff',
+                  WebkitTextFillColor: '#ffffff',
                   fontSize: '11px',
                   fontWeight: 800,
-                  padding: '3px 10px',
+                  padding: '4px 12px',
                   borderRadius: '9999px',
                   textTransform: 'uppercase',
+                  display: 'inline-block',
                 }}
               >
                 {resident.status}
               </span>
-              <h1 style={{ fontSize: '24px', fontWeight: '800', margin: '8px 0 2px 0', letterSpacing: '-0.02em' }}>
+              <h1
+                style={{
+                  fontSize: '24px',
+                  fontWeight: '800',
+                  margin: '8px 0 2px 0',
+                  letterSpacing: '-0.02em',
+                  color: '#ffffff',
+                  WebkitTextFillColor: '#ffffff',
+                }}
+              >
                 {resident.fullName}
               </h1>
-              <p style={{ margin: 0, fontSize: '13px', color: '#c7d2fe' }}>
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: '13px',
+                  color: 'rgba(255, 255, 255, 0.85)',
+                  WebkitTextFillColor: 'rgba(255, 255, 255, 0.85)',
+                }}
+              >
                 {resident.propertyId?.name} • Room <strong>{resident.roomId?.roomNumber}</strong> ({resident.occupancyType})
               </p>
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: '16px', marginTop: '20px', borderTop: '1px solid rgba(255,255,255,0.15)', paddingTop: '16px' }}>
+          <div
+            style={{
+              display: 'flex',
+              gap: '16px',
+              marginTop: '20px',
+              borderTop: '1px solid rgba(255,255,255,0.2)',
+              paddingTop: '16px',
+            }}
+          >
             <div>
-              <div style={{ fontSize: '11px', color: '#a5b4fc', fontWeight: 600 }}>MONTHLY RENT</div>
-              <div style={{ fontSize: '18px', fontWeight: 800, color: '#86efac' }}>
+              <div
+                style={{
+                  fontSize: '11px',
+                  color: 'rgba(255, 255, 255, 0.8)',
+                  WebkitTextFillColor: 'rgba(255, 255, 255, 0.8)',
+                  fontWeight: 700,
+                  letterSpacing: '0.04em',
+                }}
+              >
+                MONTHLY RENT
+              </div>
+              <div
+                style={{
+                  fontSize: '18px',
+                  fontWeight: 800,
+                  color: '#fef08a',
+                  WebkitTextFillColor: '#fef08a',
+                }}
+              >
                 ₹{resident.monthlyRent?.toLocaleString('en-IN')}/mo
               </div>
             </div>
-            <div style={{ width: '1px', background: 'rgba(255,255,255,0.15)' }} />
+            <div style={{ width: '1px', background: 'rgba(255,255,255,0.2)' }} />
             <div>
-              <div style={{ fontSize: '11px', color: '#a5b4fc', fontWeight: 600 }}>SECURITY DEPOSIT</div>
-              <div style={{ fontSize: '18px', fontWeight: 800 }}>
+              <div
+                style={{
+                  fontSize: '11px',
+                  color: 'rgba(255, 255, 255, 0.8)',
+                  WebkitTextFillColor: 'rgba(255, 255, 255, 0.8)',
+                  fontWeight: 700,
+                  letterSpacing: '0.04em',
+                }}
+              >
+                SECURITY DEPOSIT
+              </div>
+              <div
+                style={{
+                  fontSize: '18px',
+                  fontWeight: 800,
+                  color: '#ffffff',
+                  WebkitTextFillColor: '#ffffff',
+                }}
+              >
                 ₹{resident.securityDeposit?.toLocaleString('en-IN')}
               </div>
             </div>
-            <div style={{ width: '1px', background: 'rgba(255,255,255,0.15)' }} />
+            <div style={{ width: '1px', background: 'rgba(255,255,255,0.2)' }} />
             <div>
-              <div style={{ fontSize: '11px', color: '#a5b4fc', fontWeight: 600 }}>JOINED DATE</div>
-              <div style={{ fontSize: '14px', fontWeight: 700, marginTop: '2px' }}>
+              <div
+                style={{
+                  fontSize: '11px',
+                  color: 'rgba(255, 255, 255, 0.8)',
+                  WebkitTextFillColor: 'rgba(255, 255, 255, 0.8)',
+                  fontWeight: 700,
+                  letterSpacing: '0.04em',
+                }}
+              >
+                JOINED DATE
+              </div>
+              <div
+                style={{
+                  fontSize: '14px',
+                  fontWeight: 700,
+                  marginTop: '2px',
+                  color: '#ffffff',
+                  WebkitTextFillColor: '#ffffff',
+                }}
+              >
                 {new Date(resident.joiningDate).toLocaleDateString()}
               </div>
             </div>
@@ -237,7 +315,14 @@ const ResidentDetail: React.FC = () => {
         <IonSegment
           value={activeTab}
           onIonChange={(e) => setActiveTab(e.detail.value as any)}
-          style={{ background: '#111723', borderRadius: '14px', padding: '4px', marginBottom: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}
+          style={{
+            background: '#ffffff',
+            borderRadius: '14px',
+            padding: '4px',
+            marginBottom: '16px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+            border: '1px solid rgba(0,0,0,0.06)',
+          }}
         >
           <IonSegmentButton value="profile">
             <IonLabel style={{ fontWeight: 700, fontSize: '13px' }}>Profile</IonLabel>
@@ -253,31 +338,31 @@ const ResidentDetail: React.FC = () => {
         {/* TAB 1: Profile & Contact Details */}
         {activeTab === 'profile' && (
           <div>
-            <IonCard style={{ margin: 0, borderRadius: '20px', marginBottom: '16px' }}>
+            <IonCard style={{ margin: '0 0 16px 0', borderRadius: '20px' }}>
               <IonCardContent style={{ padding: '20px' }}>
-                <h3 style={{ fontSize: '15px', fontWeight: 800, color: '#ffffff', marginBottom: '14px' }}>
+                <h3 style={{ fontSize: '15px', fontWeight: 800, color: 'var(--ht-text, #303b3c)', marginBottom: '14px' }}>
                   Contact Information
                 </h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <IonIcon icon={callOutline} style={{ color: '#4f46e5', fontSize: '18px' }} />
+                    <IonIcon icon={callOutline} style={{ color: 'var(--ht-primary, #326d75)', fontSize: '18px' }} />
                     <div>
-                      <div style={{ fontSize: '11px', color: '#94a3b8' }}>PHONE NUMBER</div>
-                      <div style={{ fontSize: '14px', fontWeight: 700, color: '#ffffff' }}>{resident.phone}</div>
+                      <div style={{ fontSize: '11px', color: '#818b89' }}>PHONE NUMBER</div>
+                      <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--ht-text, #303b3c)' }}>{resident.phone}</div>
                     </div>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <IonIcon icon={mailOutline} style={{ color: '#4f46e5', fontSize: '18px' }} />
+                    <IonIcon icon={mailOutline} style={{ color: 'var(--ht-primary, #326d75)', fontSize: '18px' }} />
                     <div>
-                      <div style={{ fontSize: '11px', color: '#94a3b8' }}>EMAIL ADDRESS</div>
-                      <div style={{ fontSize: '14px', fontWeight: 700, color: '#2563eb' }}>{resident.email}</div>
+                      <div style={{ fontSize: '11px', color: '#818b89' }}>EMAIL ADDRESS</div>
+                      <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--ht-primary, #326d75)' }}>{resident.email}</div>
                     </div>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <IonIcon icon={homeOutline} style={{ color: '#4f46e5', fontSize: '18px' }} />
+                    <IonIcon icon={homeOutline} style={{ color: 'var(--ht-primary, #326d75)', fontSize: '18px' }} />
                     <div>
-                      <div style={{ fontSize: '11px', color: '#94a3b8' }}>PERMANENT ADDRESS</div>
-                      <div style={{ fontSize: '14px', fontWeight: 600, color: '#ffffff' }}>{resident.permanentAddress}</div>
+                      <div style={{ fontSize: '11px', color: '#818b89' }}>PERMANENT ADDRESS</div>
+                      <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--ht-text, #303b3c)' }}>{resident.permanentAddress}</div>
                     </div>
                   </div>
                 </div>
@@ -286,21 +371,21 @@ const ResidentDetail: React.FC = () => {
 
             <IonCard style={{ margin: 0, borderRadius: '20px' }}>
               <IonCardContent style={{ padding: '20px' }}>
-                <h3 style={{ fontSize: '15px', fontWeight: 800, color: '#ffffff', marginBottom: '14px' }}>
+                <h3 style={{ fontSize: '15px', fontWeight: 800, color: 'var(--ht-text, #303b3c)', marginBottom: '14px' }}>
                   Emergency Contact & Employment
                 </h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   <div>
-                    <div style={{ fontSize: '11px', color: '#94a3b8' }}>EMERGENCY CONTACT PERSON</div>
-                    <div style={{ fontSize: '14px', fontWeight: 700, color: '#ffffff' }}>{resident.emergencyContactName}</div>
+                    <div style={{ fontSize: '11px', color: '#818b89' }}>EMERGENCY CONTACT PERSON</div>
+                    <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--ht-text, #303b3c)' }}>{resident.emergencyContactName}</div>
                   </div>
                   <div>
-                    <div style={{ fontSize: '11px', color: '#94a3b8' }}>EMERGENCY PHONE NUMBER</div>
-                    <div style={{ fontSize: '14px', fontWeight: 700, color: '#ffffff' }}>{resident.emergencyContactNumber}</div>
+                    <div style={{ fontSize: '11px', color: '#818b89' }}>EMERGENCY PHONE NUMBER</div>
+                    <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--ht-text, #303b3c)' }}>{resident.emergencyContactNumber}</div>
                   </div>
                   <div>
-                    <div style={{ fontSize: '11px', color: '#94a3b8' }}>OCCUPATION / COMPANY</div>
-                    <div style={{ fontSize: '14px', fontWeight: 600, color: '#ffffff' }}>
+                    <div style={{ fontSize: '11px', color: '#818b89' }}>OCCUPATION / COMPANY</div>
+                    <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--ht-text, #303b3c)' }}>
                       {resident.occupation} {resident.companyOrCollege ? `• ${resident.companyOrCollege}` : ''}
                     </div>
                   </div>
@@ -329,13 +414,13 @@ const ResidentDetail: React.FC = () => {
                     Reset Password
                   </IonButton>
                 </div>
-                <div style={{ background: '#111723', borderRadius: '12px', padding: '14px', border: '1px solid #f3e8ff' }}>
+                <div style={{ background: '#ffffff', borderRadius: '12px', padding: '14px', border: '1px solid #f3e8ff' }}>
                   <div style={{ marginBottom: '8px' }}>
-                    <span style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 600 }}>Login Email</span>
-                    <div style={{ fontSize: '14px', fontWeight: 700, color: '#2563eb' }}>{resident.email}</div>
+                    <span style={{ fontSize: '11px', color: '#64748b', textTransform: 'uppercase', fontWeight: 600 }}>Login Email</span>
+                    <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--ht-primary, #326d75)' }}>{resident.email}</div>
                   </div>
                   <div>
-                    <span style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 600 }}>Account Status</span>
+                    <span style={{ fontSize: '11px', color: '#64748b', textTransform: 'uppercase', fontWeight: 600 }}>Account Status</span>
                     <div style={{ fontSize: '13px', fontWeight: 700, color: resident.status !== 'Vacated' ? '#16a34a' : '#ef4444' }}>
                       {resident.status !== 'Vacated' ? 'Active Resident Login' : 'Inactive (Vacated)'}
                     </div>
@@ -352,7 +437,7 @@ const ResidentDetail: React.FC = () => {
             <IonCard style={{ margin: '0 0 16px 0', borderRadius: '20px' }}>
               <IonCardContent style={{ padding: '20px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                  <h3 style={{ fontSize: '15px', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                  <h3 style={{ fontSize: '15px', fontWeight: 800, color: 'var(--ht-text, #303b3c)', margin: 0 }}>
                     Security Deposit Status
                   </h3>
                   <IonButton
@@ -367,17 +452,17 @@ const ResidentDetail: React.FC = () => {
                     Record Deposit Payment
                   </IonButton>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px', background: '#090c12', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '14px', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
                   <div>
-                    <div style={{ fontSize: '11px', color: '#64748b' }}>REQUIRED</div>
-                    <div style={{ fontSize: '16px', fontWeight: 800 }}>₹{resident.securityDepositRecord?.depositRequired?.toLocaleString('en-IN') ?? resident.securityDeposit}</div>
+                    <div style={{ fontSize: '11px', color: '#64748b', fontWeight: 600 }}>REQUIRED</div>
+                    <div style={{ fontSize: '16px', fontWeight: 800, color: 'var(--ht-text, #303b3c)' }}>₹{resident.securityDepositRecord?.depositRequired?.toLocaleString('en-IN') ?? resident.securityDeposit}</div>
                   </div>
                   <div>
-                    <div style={{ fontSize: '11px', color: '#64748b' }}>RECEIVED</div>
+                    <div style={{ fontSize: '11px', color: '#64748b', fontWeight: 600 }}>RECEIVED</div>
                     <div style={{ fontSize: '16px', fontWeight: 800, color: '#16a34a' }}>₹{resident.securityDepositRecord?.depositReceived?.toLocaleString('en-IN') ?? resident.securityDepositPaid}</div>
                   </div>
                   <div>
-                    <div style={{ fontSize: '11px', color: '#64748b' }}>OUTSTANDING</div>
+                    <div style={{ fontSize: '11px', color: '#64748b', fontWeight: 600 }}>OUTSTANDING</div>
                     <div style={{ fontSize: '16px', fontWeight: 800, color: resident.securityDepositRecord?.depositOutstanding > 0 ? '#ef4444' : '#16a34a' }}>
                       ₹{resident.securityDepositRecord?.depositOutstanding?.toLocaleString('en-IN') ?? 0}
                     </div>
@@ -386,21 +471,21 @@ const ResidentDetail: React.FC = () => {
               </IonCardContent>
             </IonCard>
 
-            <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#ffffff', margin: '16px 0 10px 4px' }}>
+            <h3 style={{ fontSize: '16px', fontWeight: 800, color: 'var(--ht-text, #303b3c)', margin: '16px 0 10px 4px' }}>
               Monthly Rent Invoices ({resident.rentRecords?.length || 0})
             </h3>
             {resident.rentRecords?.length > 0 ? (
               <IonList lines="none">
                 {resident.rentRecords.map((r: any) => (
-                  <IonItem key={r._id} style={{ background: '#111723', borderRadius: '14px', marginBottom: '8px', border: '1px solid #f1f5f9' }}>
+                  <IonItem key={r._id} style={{ background: '#ffffff', borderRadius: '14px', marginBottom: '8px', border: '1px solid #ece8df' }}>
                     <IonLabel>
-                      <h4 style={{ fontWeight: 800, fontSize: '15px', color: '#ffffff' }}>{r.rentMonth}</h4>
+                      <h4 style={{ fontWeight: 800, fontSize: '15px', color: 'var(--ht-text, #303b3c)' }}>{r.rentMonth}</h4>
                       <p style={{ fontSize: '12px', color: '#64748b' }}>
                         Due Date: {new Date(r.dueDate).toLocaleDateString()} • Paid: ₹{r.amountPaid?.toLocaleString('en-IN')}
                       </p>
                     </IonLabel>
                     <div slot="end" style={{ textAlign: 'right' }}>
-                      <div style={{ fontWeight: 800, fontSize: '15px' }}>₹{r.rentAmount?.toLocaleString('en-IN')}</div>
+                      <div style={{ fontWeight: 800, fontSize: '15px', color: 'var(--ht-text, #303b3c)' }}>₹{r.rentAmount?.toLocaleString('en-IN')}</div>
                       <span className={r.status === 'Paid' ? 'badge-tag badge-paid' : 'badge-tag badge-overdue'}>
                         {r.status}
                       </span>
@@ -425,8 +510,8 @@ const ResidentDetail: React.FC = () => {
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <div>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                            <IonIcon icon={shieldCheckmarkOutline} style={{ color: '#4f46e5', fontSize: '18px' }} />
-                            <strong style={{ fontSize: '15px', color: '#ffffff' }}>{doc.category}</strong>
+                            <IonIcon icon={shieldCheckmarkOutline} style={{ color: 'var(--ht-primary, #326d75)', fontSize: '18px' }} />
+                            <strong style={{ fontSize: '15px', color: 'var(--ht-text, #303b3c)' }}>{doc.category}</strong>
                           </div>
                           <div style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>
                             {doc.documentNumberMasked ? `ID: ${doc.documentNumberMasked} • ` : ''}
@@ -451,21 +536,21 @@ const ResidentDetail: React.FC = () => {
                         </span>
                       </div>
 
-                      {doc.cloudinaryUrl && (
-                        <div style={{ marginTop: '12px' }}>
-                          <IonButton
-                            size="small"
-                            fill="outline"
-                            color="primary"
-                            href={doc.cloudinaryUrl}
-                            target="_blank"
-                            style={{ '--border-radius': '10px' }}
-                          >
-                            <IonIcon icon={openOutline} slot="start" />
-                            View Document
-                          </IonButton>
-                        </div>
-                      )}
+                      <div style={{ marginTop: '12px' }}>
+                        <IonButton
+                          size="small"
+                          fill="outline"
+                          color="primary"
+                          onClick={() => {
+                            const targetUrl = doc.cloudinaryUrl || documentService.getFileUrl(doc._id);
+                            window.open(targetUrl, '_blank');
+                          }}
+                          style={{ '--border-radius': '10px' }}
+                        >
+                          <IonIcon icon={openOutline} slot="start" />
+                          View Document
+                        </IonButton>
+                      </div>
 
                       {/* Admin Verification Actions */}
                       {doc.verificationStatus === 'Pending' && (

@@ -59,8 +59,65 @@ const AdminRooms: React.FC = () => {
     roomType: 'AC',
     rentalType: 'Sharing',
     maxCapacity: 2,
-    defaultRent: 8500,
+    defaultRent: 8000,
   });
+
+  const getSuggestedRent = (
+    prop: any,
+    rentalType: string,
+    capacity: number,
+    roomType: string
+  ) => {
+    if (!prop) return 8000;
+    const rates = prop.sharingRates || {};
+    let base = 8000;
+
+    if (rentalType === 'Full Room (Single Tenant)') {
+      base = rates.single || 12000;
+    } else {
+      const cap = Number(capacity) || 2;
+      if (cap === 1) base = rates.single || 12000;
+      else if (cap === 2) base = rates.double || 8000;
+      else if (cap === 3) base = rates.triple || 6500;
+      else if (cap >= 4) base = rates.four || 5000;
+      else base = rates.double || 8000;
+    }
+
+    // Optional AC addon if non-AC is lower or base is standard
+    return base;
+  };
+
+  const handleOpenRoomModal = () => {
+    const currentProp = properties.find((p) => p._id === selectedProperty) || properties[0];
+    const initialRent = getSuggestedRent(currentProp, 'Sharing', 2, 'AC');
+    setRoomForm({
+      roomNumber: '',
+      floor: 1,
+      roomType: 'AC',
+      rentalType: 'Sharing',
+      maxCapacity: 2,
+      defaultRent: initialRent,
+    });
+    setRoomModalOpen(true);
+  };
+
+  const updateRoomFormWithAutoRent = (updates: Partial<typeof roomForm>) => {
+    setRoomForm((prev) => {
+      const next = { ...prev, ...updates };
+      const currentProp = properties.find((p) => p._id === selectedProperty) || properties[0];
+      const autoRent = getSuggestedRent(
+        currentProp,
+        next.rentalType,
+        next.maxCapacity,
+        next.roomType
+      );
+      // Automatically update defaultRent when plan or sharing capacity changes
+      return {
+        ...next,
+        defaultRent: autoRent,
+      };
+    });
+  };
 
   const loadProperties = async () => {
     try {
@@ -131,14 +188,14 @@ const AdminRooms: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      <IonContent className="ion-padding" style={{ '--background': '#090c12' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-          <div style={{ flex: 1, marginRight: '8px' }}>
+      <IonContent className="ion-padding" style={{ '--background': '#f8fafc' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', gap: '10px' }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
             <IonSelect
               value={selectedProperty}
               placeholder="Select Property"
               onIonChange={(e) => setSelectedProperty(e.detail.value)}
-              style={{ background: '#fff', borderRadius: '10px', padding: '6px 12px', border: '1px solid #cbd5e1' }}
+              style={{ background: '#ffffff', borderRadius: '12px', padding: '6px 12px', border: '1px solid #cbd5e1', boxShadow: '0 1px 3px rgba(0,0,0,0.04)', width: '100%' }}
             >
               {properties.map((p) => (
                 <IonSelectOption key={p._id} value={p._id}>
@@ -148,13 +205,24 @@ const AdminRooms: React.FC = () => {
             </IonSelect>
           </div>
 
-          <IonButton size="small" color="secondary" onClick={() => setRoomModalOpen(true)}>
+          <IonButton
+            size="small"
+            style={{
+              '--background': '#c77e68',
+              '--color': '#ffffff',
+              fontWeight: 800,
+              '--border-radius': '10px',
+              whiteSpace: 'nowrap',
+              height: '38px',
+            }}
+            onClick={handleOpenRoomModal}
+          >
             + Add Room
           </IonButton>
         </div>
 
-        <div style={{ marginBottom: '12px', fontSize: '13px', color: '#64748b' }}>
-          Total Rooms: <strong>{rooms.length}</strong> (Flexible Single Tenant or Sharing)
+        <div style={{ marginBottom: '14px', fontSize: '13px', color: '#64748b', fontWeight: 600 }}>
+          Total Rooms: <strong style={{ color: '#1e293b' }}>{rooms.length}</strong> (Flexible Single Tenant or Sharing)
         </div>
 
         {rooms.map((r) => (
@@ -165,16 +233,16 @@ const AdminRooms: React.FC = () => {
             style={{
               margin: '0 0 16px 0',
               borderRadius: '20px',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              background: '#111723',
-              boxShadow: '0 4px 14px rgba(15, 23, 42, 0.03)',
+              border: '1px solid #e2e8f0',
+              background: '#ffffff',
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
             }}
           >
             <IonCardContent style={{ padding: '18px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <h3 style={{ fontSize: '18px', fontWeight: '800', margin: 0, color: '#ffffff' }}>
+                    <h3 style={{ fontSize: '18px', fontWeight: '800', margin: 0, color: '#1e293b' }}>
                       Room {r.roomNumber}
                     </h3>
                     <IonBadge color={r.rentalType === 'Full Room (Single Tenant)' ? 'tertiary' : 'primary'}>
@@ -202,7 +270,7 @@ const AdminRooms: React.FC = () => {
                   <span style={{ fontSize: '12px', fontWeight: '700', color: '#64748b' }}>
                     Occupants ({r.occupants?.length || 0})
                   </span>
-                  <span style={{ fontSize: '12px', color: '#4f46e5', fontWeight: 700 }}>
+                  <span style={{ fontSize: '12px', color: '#326d75', fontWeight: 800 }}>
                     View Room Details →
                   </span>
                 </div>
@@ -228,7 +296,7 @@ const AdminRooms: React.FC = () => {
                         }}
                       >
                         <div>
-                          <strong style={{ color: '#ffffff' }}>{occ.fullName}</strong> ({occ.phone})
+                          <strong style={{ color: '#1e293b' }}>{occ.fullName}</strong> ({occ.phone})
                         </div>
                         <div style={{ fontWeight: '700', color: '#16a34a' }}>
                           ₹{occ.monthlyRent?.toLocaleString('en-IN')}/mo
@@ -282,7 +350,7 @@ const AdminRooms: React.FC = () => {
                 <IonLabel position="stacked">AC / Non-AC</IonLabel>
                 <IonSelect
                   value={roomForm.roomType}
-                  onIonChange={(e) => setRoomForm({ ...roomForm, roomType: e.detail.value })}
+                  onIonChange={(e) => updateRoomFormWithAutoRent({ roomType: e.detail.value })}
                 >
                   <IonSelectOption value="AC">AC</IonSelectOption>
                   <IonSelectOption value="Non-AC">Non-AC</IonSelectOption>
@@ -293,8 +361,7 @@ const AdminRooms: React.FC = () => {
                 <IonSelect
                   value={roomForm.rentalType}
                   onIonChange={(e) =>
-                    setRoomForm({
-                      ...roomForm,
+                    updateRoomFormWithAutoRent({
                       rentalType: e.detail.value,
                       maxCapacity: e.detail.value === 'Full Room (Single Tenant)' ? 1 : 2,
                     })
@@ -309,11 +376,16 @@ const AdminRooms: React.FC = () => {
               {roomForm.rentalType === 'Sharing' && (
                 <IonItem lines="inset" style={{ '--padding-start': '0' }}>
                   <IonLabel position="stacked">Maximum Sharing Capacity</IonLabel>
-                  <IonInput
-                    type="number"
+                  <IonSelect
                     value={roomForm.maxCapacity}
-                    onIonChange={(e) => setRoomForm({ ...roomForm, maxCapacity: Number(e.detail.value!) })}
-                  />
+                    placeholder="Select sharing capacity"
+                    onIonChange={(e) => updateRoomFormWithAutoRent({ maxCapacity: Number(e.detail.value) })}
+                  >
+                    <IonSelectOption value={1}>1-Sharing (Single)</IonSelectOption>
+                    <IonSelectOption value={2}>2-Sharing (Double)</IonSelectOption>
+                    <IonSelectOption value={3}>3-Sharing (Triple)</IonSelectOption>
+                    <IonSelectOption value={4}>4-Sharing (Four)</IonSelectOption>
+                  </IonSelect>
                 </IonItem>
               )}
               <IonItem lines="inset" style={{ '--padding-start': '0' }}>
